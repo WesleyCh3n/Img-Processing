@@ -32,7 +32,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.conSlider.setSingleStep(1)
 
         self.reSlider.setMinimum(1)
-        self.reSlider.setMaximum(5)
+        self.reSlider.setMaximum(3)
         self.reSlider.setSingleStep(1)
 
         chartView = QChartView(self.showchart())
@@ -184,13 +184,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.imgLb.setPixmap(outImg.scaled(self.imgLb.width(),self.imgLb.height(),Qt.KeepAspectRatio))
 
     def reSlider_change(self):
-        thresh = self.conSlider.value()
+        thresh = self.reSlider.value()
+        print(thresh)
         self.inImg.load(self.path[0])
         new_image = QImage(QSize(self.inImg.width()*thresh, self.inImg.height()*thresh),QImage.Format_RGB32);
         for x in range(self.inImg.width()*thresh):
             for y in range(self.inImg.height()*thresh):
                 oldColor = QColor(self.inImg.pixel(int(x/thresh),int(y/thresh)))
-                new_image.setPixel(x,y, oldColor)
+                val = qRgb(oldColor.red(),oldColor.green(),oldColor.blue())
+                new_image.setPixel(x,y, val)
         outImg = QPixmap.fromImage(new_image)
         self.imgLb.setPixmap(outImg)
 
