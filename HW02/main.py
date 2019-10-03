@@ -18,7 +18,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent = None):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
-
         self.bSlider.setMinimum(0)
         self.bSlider.setMaximum(255)
         self.bSlider.setSingleStep(1)
@@ -32,6 +31,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.conSlider.setMaximum(255)
         self.conSlider.setSingleStep(1)
 
+        self.reSlider.setMinimum(1)
+        self.reSlider.setMaximum(5)
+        self.reSlider.setSingleStep(1)
+
         chartView = QChartView(self.showchart())
         self.grid1.addWidget(chartView, 1, 1) 
 
@@ -42,6 +45,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.bSlider.sliderReleased.connect(self.bSlider_change)
         self.briSlider.sliderReleased.connect(self.briSlider_change)
         self.conSlider.sliderReleased.connect(self.conSlider_change)
+        self.reSlider.sliderReleased.connect(self.reSlider_change)
 
     def showchart(self):
         for i in range(256):
@@ -178,6 +182,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.setHisto.replace(i,self.histo[i])
         outImg = QPixmap.fromImage(self.inImg)
         self.imgLb.setPixmap(outImg.scaled(self.imgLb.width(),self.imgLb.height(),Qt.KeepAspectRatio))
+
+    def reSlider_change(self):
+        thresh = self.conSlider.value()
+        self.inImg.load(self.path[0])
+        new_image = QImage(QSize(self.inImg.width()*thresh, self.inImg.height()*thresh),QImage.Format_RGB32);
+        for x in range(self.inImg.width()*thresh):
+            for y in range(self.inImg.height()*thresh):
+                oldColor = QColor(self.inImg.pixel(int(x/thresh),int(y/thresh)))
+                new_image.setPixel(x,y, oldColor)
+        outImg = QPixmap.fromImage(new_image)
+        self.imgLb.setPixmap(outImg)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
