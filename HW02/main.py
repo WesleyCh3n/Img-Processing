@@ -31,9 +31,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.conSlider.setMaximum(255)
         self.conSlider.setSingleStep(1)
 
-        self.reSlider.setMinimum(1)
-        self.reSlider.setMaximum(3)
-        self.reSlider.setSingleStep(1)
+        self.spinBox.setRange(1,10)
+        self.spinBox.setSingleStep(1)
 
         chartView = QChartView(self.showchart())
         self.grid1.addWidget(chartView, 1, 1) 
@@ -45,7 +44,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.bSlider.sliderReleased.connect(self.bSlider_change)
         self.briSlider.sliderReleased.connect(self.briSlider_change)
         self.conSlider.sliderReleased.connect(self.conSlider_change)
-        self.reSlider.sliderReleased.connect(self.reSlider_change)
+        self.spinBox.valueChanged.connect(self.spinBox_change)
 
     def showchart(self):
         for i in range(256):
@@ -183,8 +182,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         outImg = QPixmap.fromImage(self.inImg)
         self.imgLb.setPixmap(outImg.scaled(self.imgLb.width(),self.imgLb.height(),Qt.KeepAspectRatio))
 
-    def reSlider_change(self):
-        thresh = self.reSlider.value()
+    def spinBox_change(self):
+        thresh = self.spinBox.value()
         print(thresh)
         self.inImg.load(self.path[0])
         new_image = QImage(QSize(self.inImg.width()*thresh, self.inImg.height()*thresh),QImage.Format_RGB32);

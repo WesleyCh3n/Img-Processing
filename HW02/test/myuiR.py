@@ -34,7 +34,7 @@ class Ui_MainWindow(object):
         self.label.setGeometry(QtCore.QRect(0, -10, 301, 331))
         self.label.setMaximumSize(QtCore.QSize(10000, 10000))
         self.label.setObjectName("label")
-        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+        self.scrollArea.setWidget(self.label)
         self.spinBox = QtWidgets.QSpinBox(self.centralwidget)
         self.spinBox.setGeometry(QtCore.QRect(560, 290, 111, 31))
         self.spinBox.setObjectName("spinBox")
