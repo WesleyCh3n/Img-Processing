@@ -18,22 +18,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent = None):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
-        self.bSlider.setMinimum(0)
-        self.bSlider.setMaximum(255)
+
+        self.bSlider.setRange(0, 255)
         self.bSlider.setSingleStep(1)
 
-        # self.briSlider.setValue(0)
-        self.briSlider.setMinimum(-255)
-        self.briSlider.setMaximum(255)
+        self.briSlider.setRange(-255, 255)
         self.briSlider.setSingleStep(1)
 
-        self.conSlider.setMinimum(-255)
-        self.conSlider.setMaximum(255)
+        self.conSlider.setRange(-255, 255)
         self.conSlider.setSingleStep(1)
 
-        self.spinBox.setRange(1,10)
-        self.spinBox.setSingleStep(1)
+        self.lsB.setRange(1,10)
+        self.lsB.setSingleStep(1)
+        self.lsB.setSuffix("%")
 
+        self.ssB.setRange(0.1, 1.0)
+        self.ssB.setSingleStep(0.1)
+        self.ssB.setValue(1.0)
+        self.ssB.setSuffix("%")
         chartView = QChartView(self.showchart())
         self.grid1.addWidget(chartView, 1, 1) 
 
@@ -44,7 +46,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.bSlider.sliderReleased.connect(self.bSlider_change)
         self.briSlider.sliderReleased.connect(self.briSlider_change)
         self.conSlider.sliderReleased.connect(self.conSlider_change)
-        self.spinBox.valueChanged.connect(self.spinBox_change)
+        self.lsB.valueChanged.connect(self.lsB_change)
+        self.ssB.valueChanged.connect(self.ssB_change)
 
     def showchart(self):
         for i in range(256):
@@ -182,19 +185,30 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         outImg = QPixmap.fromImage(self.inImg)
         self.imgLb.setPixmap(outImg.scaled(self.imgLb.width(),self.imgLb.height(),Qt.KeepAspectRatio))
 
-    def spinBox_change(self):
-        thresh = self.spinBox.value()
-        print(thresh)
+    def lsB_change(self):
+        thresh = self.lsB.value()
         self.inImg.load(self.path[0])
-        new_image = QImage(QSize(self.inImg.width()*thresh, self.inImg.height()*thresh),QImage.Format_RGB32);
-        for x in range(self.inImg.width()*thresh):
-            for y in range(self.inImg.height()*thresh):
+        new_image = QImage(QSize(int(self.inImg.width()*thresh), int(self.inImg.height()*thresh)),QImage.Format_RGB32);
+        for x in range(int(self.inImg.width()*thresh)):
+            for y in range(int(self.inImg.height()*thresh)):
                 oldColor = QColor(self.inImg.pixel(int(x/thresh),int(y/thresh)))
                 val = qRgb(oldColor.red(),oldColor.green(),oldColor.blue())
                 new_image.setPixel(x,y, val)
         outImg = QPixmap.fromImage(new_image)
         self.imgLb.setPixmap(outImg)
 
+    def ssB_change(self):
+        thresh = self.ssB.value()
+        self.inImg.load(self.path[0])
+        new_image = QImage(QSize(int(self.inImg.width()*thresh), int(self.inImg.height()*thresh)),QImage.Format_RGB32);
+        for x in range(int(self.inImg.width()*thresh)):
+            for y in range(int(self.inImg.height()*thresh)):
+                oldColor = QColor(self.inImg.pixel(int(x/thresh),int(y/thresh)))
+                val = qRgb(oldColor.red(),oldColor.green(),oldColor.blue())
+                new_image.setPixel(x,y, val)
+        outImg = QPixmap.fromImage(new_image)
+        self.imgLb.setPixmap(outImg)
+        
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     w = MainWindow()
