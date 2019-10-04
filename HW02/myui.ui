@@ -62,6 +62,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="eqBn">
+         <property name="text">
+          <string>Equalization</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="label_4">
          <property name="text">
           <string>Enlarge</string>
@@ -107,8 +114,8 @@
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>721</width>
-        <height>41</height>
+        <width>801</width>
+        <height>43</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
@@ -240,6 +247,7 @@
      <string>File</string>
     </property>
     <addaction name="actionOpen_File"/>
+    <addaction name="actionReset"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -247,6 +255,11 @@
   <action name="actionOpen_File">
    <property name="text">
     <string>Open File</string>
+   </property>
+  </action>
+  <action name="actionReset">
+   <property name="text">
+    <string>Reset</string>
    </property>
   </action>
  </widget>
