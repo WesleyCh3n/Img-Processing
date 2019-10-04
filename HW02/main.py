@@ -8,7 +8,7 @@ from PyQt5.QtChart import *
 class MainWindow(QMainWindow, Ui_MainWindow):
 
     inImg = QImage()
-    path = 0
+    path = False
     histo = []
     setHisto = QBarSet("256 Grayscale")
     yLimit = 1500
@@ -91,7 +91,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.imgLb.setPixmap(outImg.scaled(self.imgLb.width(),self.imgLb.height(),Qt.KeepAspectRatio))
     
     def grayaBn_click(self):
-        if self.path == 0 :return 0
+        if self.path == False :return QMessageBox.warning(self, "WARNING", "The input image is empty")
         self.histo = [0 for i in range(256)]
         self.inImg.load(self.path[0])
         for x in range(self.inImg.width()):
@@ -107,7 +107,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.imgLb.setPixmap(outImg.scaled(self.imgLb.width(),self.imgLb.height(),Qt.KeepAspectRatio))
 
     def graybBn_click(self):
-        if self.path == 0 :return 0
+        if self.path == False :return QMessageBox.warning(self, "WARNING", "The input image is empty")
         self.histo = [0 for i in range(256)]
         self.inImg.load(self.path[0])
         for x in range(self.inImg.width()):
@@ -123,7 +123,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.imgLb.setPixmap(outImg.scaled(self.imgLb.width(),self.imgLb.height(),Qt.KeepAspectRatio))
 
     def subBn_click(self):
-        if self.path == 0 :return 0
+        if self.path == False :return QMessageBox.warning(self, "WARNING", "The input image is empty")
         self.histo = [0 for i in range(256)]
         self.inImg.load(self.path[0])
         for x in range(self.inImg.width()):
@@ -141,7 +141,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.imgLb.setPixmap(outImg.scaled(self.imgLb.width(),self.imgLb.height(),Qt.KeepAspectRatio))
 
     def bSlider_change(self):
-        if self.path == 0 :return 0
+        if self.path == False :return QMessageBox.warning(self, "WARNING", "The input image is empty")
         self.histo = [0 for i in range(256)]
         thresh = self.bSlider.value()
         self.inImg.load(self.path[0])
@@ -159,7 +159,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.imgLb.setPixmap(outImg.scaled(self.imgLb.width(),self.imgLb.height(),Qt.KeepAspectRatio))
 
     def briSlider_change(self):
-        if self.path == 0 :return 0
+        if self.path == False :return QMessageBox.warning(self, "WARNING", "The input image is empty")
         self.histo = [0 for i in range(256)]
         thresh = self.briSlider.value()
         self.inImg.load(self.path[0])
@@ -175,7 +175,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.imgLb.setPixmap(outImg.scaled(self.imgLb.width(),self.imgLb.height(),Qt.KeepAspectRatio))
 
     def conSlider_change(self):
-        if self.path == 0 :return 0
+        if self.path == False :return QMessageBox.warning(self, "WARNING", "The input image is empty")
         self.histo = [0 for i in range(256)]
         thresh = self.conSlider.value()
         self.inImg.load(self.path[0])
@@ -192,7 +192,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.imgLb.setPixmap(outImg.scaled(self.imgLb.width(),self.imgLb.height(),Qt.KeepAspectRatio))
 
     def lsB_change(self):
-        if self.path == 0 :return 0
+        if self.path == False :return QMessageBox.warning(self, "WARNING", "The input image is empty")
         thresh = self.lsB.value()
         self.inImg.load(self.path[0])
         new_image = QImage(QSize(int(self.inImg.width()*thresh), int(self.inImg.height()*thresh)),QImage.Format_RGB32);
@@ -205,7 +205,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.imgLb.setPixmap(outImg)
 
     def ssB_change(self):
-        if self.path == 0 :return 0
+        if self.path == False :return QMessageBox.warning(self, "WARNING", "The input image is empty")
         thresh = self.ssB.value()
         self.inImg.load(self.path[0])
         new_image = QImage(QSize(int(self.inImg.width()*thresh), int(self.inImg.height()*thresh)),QImage.Format_RGB32);
