@@ -43,6 +43,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.grayaBn.clicked.connect(self.grayaBn_click)
         self.graybBn.clicked.connect(self.graybBn_click)
         self.subBn.clicked.connect(self.subBn_click)
+        self.eqBn.clicked.connect(self.eqBn_click)
         self.bSlider.sliderReleased.connect(self.bSlider_change)
         self.briSlider.sliderReleased.connect(self.briSlider_change)
         self.conSlider.sliderReleased.connect(self.conSlider_change)
@@ -134,6 +135,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 func = lambda x, y:0 if (x-y) <= 0 else (x-y)*150 if ((x-y)*255) < 255 else 255
                 self.histo[int(func(ave2, ave1))] += 1
                 val = qRgb(func(ave2, ave1),func(ave2, ave1),func(ave2, ave1))
+                self.inImg.setPixel(x,y,val)
+        for i in range(256):
+            self.setHisto.replace(i,self.histo[i])
+        outImg = QPixmap.fromImage(self.inImg)
+        self.imgLb.setPixmap(outImg.scaled(self.imgLb.width(),self.imgLb.height(),Qt.KeepAspectRatio))
+    def eqBn_click(self):
+        if self.path == False: return QMessageBox.warning(self, "Warning", "The input image is empty")
+        self.histo = [0 for i in range(256)]
+        self.inImg.load(self.path[0])
+        for x in range(self.inImg.width()):
+            for y in range(self.inImg.height()):
+                oldColor = QColor(self.inImg.pixel(x,y))
+                ave = (oldColor.red()+oldColor.green()+oldColor.blue())/3
+                val = qRgb(ave,ave,ave)
+                self.histo[int(ave)] += 1
                 self.inImg.setPixel(x,y,val)
         for i in range(256):
             self.setHisto.replace(i,self.histo[i])
