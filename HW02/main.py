@@ -40,6 +40,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.grid1.addWidget(chartView, 1, 1) 
 
         self.actionOpen_File.triggered.connect(self.openImg_click)
+        self.actionReset.triggered.connect(self.reset_click)
         self.grayaBn.clicked.connect(self.grayaBn_click)
         self.graybBn.clicked.connect(self.graybBn_click)
         self.subBn.clicked.connect(self.subBn_click)
@@ -80,6 +81,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         chart.setAxisX(axisX, series)
         chart.setAxisY(axisY, series)
+        font = QFont("Helvetica", 15)
+        chart.setTitleFont(font)
         chart.setTitle("Histogram")
         chart.legend().setVisible(False);
         # chart.legend().setAlignment(Qt.AlignTop);
@@ -90,7 +93,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.inImg.load(self.path[0])
         outImg = QPixmap.fromImage(self.inImg)
         self.imgLb.setPixmap(outImg.scaled(self.imgLb.width(),self.imgLb.height(),Qt.KeepAspectRatio))
-    
+
+    def reset_click(self):
+        if self.path == False :return 0
+        self.histo = [0 for i in range(256)]
+        self.inImg.load(self.path[0])
+        outImg = QPixmap.fromImage(self.inImg)
+        self.imgLb.setPixmap(outImg.scaled(self.imgLb.width(),self.imgLb.height(),Qt.KeepAspectRatio))
+        self.bSlider.setValue(0)
+        self.briSlider.setValue(0)
+        self.conSlider.setValue(0)
+        self.lsB.setValue(1)
+        self.ssB.setValue(1.0)
+
     def grayaBn_click(self):
         if self.path == False :return QMessageBox.warning(self, "WARNING", "The input image is empty")
         self.histo = [0 for i in range(256)]
