@@ -11,7 +11,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     path = False
     histo = []
     setHisto = QBarSet("256 Grayscale")
-    yLimit = 1500
+    yLimit = 5000 
     for i in range(256):
             histo.append(0)
 
@@ -148,8 +148,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             for y in range(self.inImg.height()):
                 oldColor = QColor(self.inImg.pixel(x,y))
                 ave = (oldColor.red()+oldColor.green()+oldColor.blue())/3
-                val = qRgb(ave,ave,ave)
                 self.histo[int(ave)] += 1
+        sum_ = 0
+        tfunc = [0 for i in range(256)]
+        for i in range(256):
+            sum_ += self.histo[i]/ (self.inImg.width()*self.inImg.height())
+            tfunc[i] = int(sum_ * i)
+        # print(tfunc[:])
+        self.histo = [0 for i in range(256)]
+        for x in range(self.inImg.width()):
+            for y in range(self.inImg.height()):
+                oldColor = QColor(self.inImg.pixel(x,y))
+                ave = (oldColor.red()+oldColor.green()+oldColor.blue())/3
+                val = qRgb(tfunc[int(ave)], tfunc[int(ave)],tfunc[int(ave)])
+                self.histo[tfunc[int(ave)]] += 1
                 self.inImg.setPixel(x,y,val)
         for i in range(256):
             self.setHisto.replace(i,self.histo[i])
