@@ -11,7 +11,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     path = False
     histo = []
     setHisto = QBarSet("256 Grayscale")
-    yLimit = 5000 
+    yLimit = 50000 
     for i in range(256):
             histo.append(0)
 
