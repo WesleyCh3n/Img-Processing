@@ -25,7 +25,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.briSlider.setRange(-255, 255)
         self.briSlider.setSingleStep(1)
 
-        self.conSlider.setRange(-255, 255)
+        self.conSlider.setRange(-128, 128)
         self.conSlider.setSingleStep(1)
 
         self.lsB.setRange(1,10)
@@ -225,9 +225,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for x in range(self.inImg.width()):
             for y in range(self.inImg.height()):
                 oldColor = QColor(self.inImg.pixel(x,y))
-                func = lambda c, t: c+t if c>128 else c-t
+                # func = lambda x, y: ((259*(x+255))/(255*(259-x)))*(y-128)+128
+                func = lambda x, y: ((256*(x+256))/(256*(256-x)))*(y-128)+128
                 limit = lambda x: 255 if x>255 else 0 if x<0 else x
-                val = qRgb(limit(func(oldColor.red(), thresh)),limit(func(oldColor.green(), thresh)),limit(func(oldColor.blue(), thresh)))
+                print(func(thresh, oldColor.red()))
+                val = qRgb(limit(int(func(thresh, oldColor.red()))),limit(int(func(thresh, oldColor.green()))),limit(int(func(thresh, oldColor.blue()))))
                 self.inImg.setPixel(x,y,val)
         for i in range(256):
             self.setHisto.replace(i,self.histo[i])

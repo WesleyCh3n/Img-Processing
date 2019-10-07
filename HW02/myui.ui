@@ -20,11 +20,11 @@
       <x>10</x>
       <y>10</y>
       <width>821</width>
-      <height>81</height>
+      <height>91</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -115,7 +115,7 @@
         <x>10</x>
         <y>10</y>
         <width>801</width>
-        <height>43</height>
+        <height>44</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
