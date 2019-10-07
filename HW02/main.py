@@ -228,7 +228,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 # func = lambda x, y: ((259*(x+255))/(255*(259-x)))*(y-128)+128
                 func = lambda x, y: ((256*(x+256))/(256*(256-x)))*(y-128)+128
                 limit = lambda x: 255 if x>255 else 0 if x<0 else x
-                print(func(thresh, oldColor.red()))
                 val = qRgb(limit(int(func(thresh, oldColor.red()))),limit(int(func(thresh, oldColor.green()))),limit(int(func(thresh, oldColor.blue()))))
                 self.inImg.setPixel(x,y,val)
         for i in range(256):
