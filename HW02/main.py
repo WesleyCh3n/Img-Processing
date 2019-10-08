@@ -11,7 +11,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     path = False
     histo = []
     setHisto = QBarSet("256 Grayscale")
-    yLimit = 50000 
+    yLimit = 5000 
     for i in range(256):
             histo.append(0)
 
@@ -30,7 +30,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.lsB.setRange(1,10)
         self.lsB.setSingleStep(1)
-        self.lsB.setSuffix("%")
+        self.lsB.setSuffix("00%")
 
         self.ssB.setRange(0.1, 1.0)
         self.ssB.setSingleStep(0.1)
@@ -209,9 +209,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for x in range(self.inImg.width()):
             for y in range(self.inImg.height()):
                 oldColor = QColor(self.inImg.pixel(x,y))
+                ave = (oldColor.red()+oldColor.green()+oldColor.blue())/3
                 func = lambda c, t: c + t if (c + t)>=0 and (c + t)<=255 else 255 if (c + t)>255 else 0
                 val = qRgb(func(oldColor.red(), thresh),func(oldColor.green(), thresh),func(oldColor.blue(), thresh))
                 self.inImg.setPixel(x,y,val)
+                self.histo[int(func(ave, thresh))] += 1
         for i in range(256):
             self.setHisto.replace(i,self.histo[i])
         outImg = QPixmap.fromImage(self.inImg)
@@ -225,11 +227,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for x in range(self.inImg.width()):
             for y in range(self.inImg.height()):
                 oldColor = QColor(self.inImg.pixel(x,y))
+                ave = (oldColor.red()+oldColor.green()+oldColor.blue())/3
                 # func = lambda x, y: ((259*(x+255))/(255*(259-x)))*(y-128)+128
                 func = lambda x, y: ((256*(x+256))/(256*(256-x)))*(y-128)+128
                 limit = lambda x: 255 if x>255 else 0 if x<0 else x
+                # val = qRgb(limit(func(thresh, ave)), limit(func(thresh, ave)), limit(func(thresh, ave)))
                 val = qRgb(limit(int(func(thresh, oldColor.red()))),limit(int(func(thresh, oldColor.green()))),limit(int(func(thresh, oldColor.blue()))))
                 self.inImg.setPixel(x,y,val)
+                self.histo[int(limit(func(thresh, ave)))] += 1
         for i in range(256):
             self.setHisto.replace(i,self.histo[i])
         outImg = QPixmap.fromImage(self.inImg)
