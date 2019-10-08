@@ -95,7 +95,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.imgLb.setPixmap(outImg.scaled(self.imgLb.width(),self.imgLb.height(),Qt.KeepAspectRatio))
 
     def reset_click(self):
-        if self.path == False :return 0
+        if self.path == False:
+            self.reset_click
+            return 0
         self.histo = [0 for i in range(256)]
         self.inImg.load(self.path[0])
         outImg = QPixmap.fromImage(self.inImg)
