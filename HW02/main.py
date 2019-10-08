@@ -155,6 +155,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.setHisto.replace(i,self.histo[i])
         outImg = QPixmap.fromImage(self.inImg)
         self.imgLb.setPixmap(outImg.scaled(self.imgLb.width(),self.imgLb.height(),Qt.KeepAspectRatio))
+
     def eqBn_click(self):
         if self.path == False: return QMessageBox.warning(self, "Warning", "The input image is empty")
         self.histo = [0 for i in range(256)]
