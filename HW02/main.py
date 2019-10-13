@@ -67,7 +67,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         axisX.setGridLineVisible(True)
         axisX.setTickCount(4)
         axisX.setMinorTickCount(1)
-        axisX.setTitleText("X")
+        axisX.setTitleText("Gray level")
         chart.addAxis(axisX, Qt.AlignBottom)
 
         axisY = QValueAxis()
@@ -232,7 +232,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 oldColor = QColor(self.inImg.pixel(x,y))
                 ave = (oldColor.red()+oldColor.green()+oldColor.blue())/3
                 # func = lambda x, y: ((259*(x+255))/(255*(259-x)))*(y-128)+128
-                func = lambda x, y: ((256*(x+256))/(256*(256-x)))*(y-128)+128
+                # func = lambda x, y: ((256*(x+256))/(256*(256-x)))*(y-128)+128
+                func = lambda x, y: (x+256)/(256-x)*(y-128)+128
                 limit = lambda x: 255 if x>255 else 0 if x<0 else x
                 # val = qRgb(limit(func(thresh, ave)), limit(func(thresh, ave)), limit(func(thresh, ave)))
                 val = qRgb(limit(int(func(thresh, oldColor.red()))),limit(int(func(thresh, oldColor.green()))),limit(int(func(thresh, oldColor.blue()))))
