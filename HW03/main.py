@@ -16,23 +16,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 	def openImg_click(self):
 		self.path = QFileDialog.getOpenFileName(self,"Open file","","Images(*.jpg)")
-		print(self.path)
 		img = cv2.imread(self.path[0])
-		inImg = self.MatToQImage(img)
-		outImg = QPixmap.fromImage(inImg)
+		outImg = self.MatToQImage(img)		
 		self.label.setPixmap(outImg.scaled(self.label.width(),self.label.height(),Qt.KeepAspectRatio))
-		# cv2.imshow("image", img)
-		# cv2.waitKey(0) 
-		# cv2.destroyAllWindows()
-	def MatToQImage(self, mat, swapped=True):
-		print(type(mat))
+
+	def MatToQImage(self, mat, swapped=True, qpixmap=True):
 		height, width = mat.shape[:2]
 		dim = 1 if mat.ndim == 2 else mat.shape[2]
 		bytesPerLine = dim * width
 		qimage = QtGui.QImage(mat.data, width, height, bytesPerLine, QtGui.QImage.Format_RGB888)
 		if swapped:
-			qimage = qimage.rgbSwapped()
-			return qimage
+			if qpixmap:
+				qimage = qimage.rgbSwapped()
+				final = QPixmap.fromImage(qimage)
+				return final
+			else:	
+				qimage = qimage.rgbSwapped()
+				return qimage
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     w = MainWindow()
