@@ -7,30 +7,24 @@ import cv2
 import numpy as np
 
 class MainWindow(QMainWindow, Ui_MainWindow):
-	path = False
+	inImg = False
 
 	def __init__(self, parent = None):
 		super(MainWindow, self).__init__(parent)
 		self.setupUi(self)
+
+		self.inImg = cv2.imread('/Users/YoChen/Documents/GitHub/Img-Processing/HW03/bird.jpg')
+		outImg = self.MatToQImage(self.inImg)
+		self.imgLb.setPixmap(outImg.scaled(self.imgLb.width(),self.imgLb.height(),Qt.KeepAspectRatio))
+
 		self.actionOpen_File.triggered.connect(self.openImg_click)
+		self.sfLb.clicked.connect(self.sfLb_click)
 
 	def openImg_click(self):
-		self.path = QFileDialog.getOpenFileName(self,"Open file","","Images(*.jpg)")
-		img = cv2.imread(self.path[0])
-		print(img.dtype.name)
-		b,g,r = cv2.split(img)
-		print(b.dtype.name)
-		# b = np.split(img, 3, axis=2)[0].squeeze(axis=2).astype(np.uint8)
-		# g = np.split(img, 3, axis=2)[1].squeeze(axis=2).astype(np.uint8)
-		# r = np.split(img, 3, axis=2)[2].squeeze(axis=2).astype(np.uint8)
-		new_img = cv2.merge([r,g,b])
-		# new_img = np.stack((\
-		# 	np.zeros((img.shape[0],img.shape[1]),dtype=np.uint8),\
-		# 	np.zeros((img.shape[0],img.shape[1]),dtype=np.uint8),\
-		# 	r), axis=2)
-		print(new_img)
-		outImg = self.MatToQImage(new_img)		
-		self.label.setPixmap(outImg.scaled(self.label.width(),self.label.height(),Qt.KeepAspectRatio))
+		# path = QFileDialog.getOpenFileName(self,"Open file","","Images(*.jpg)")
+		# self.inImg = cv2.imread(path[0])
+		outImg = self.MatToQImage(self.inImg)
+		self.imgLb.setPixmap(outImg.scaled(self.imgLb.width(),self.imgLb.height(),Qt.KeepAspectRatio))
 
 	def MatToQImage(self, mat, swapped=True, qpixmap=True):
 		height, width = mat.shape[:2]
@@ -45,6 +39,26 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 			else:	
 				qimage = qimage.rgbSwapped()
 				return qimage
+
+	def sfLb_click(self):
+		def padded(mask, ch):
+			ch_add = [[0,0,0],[0,0,0]]
+			z_c = np.zeros((ch[0].shape[0], int((mask-1)/2)), dtype=np.uint8)
+			z_r = np.zeros((int((mask-1)/2), (ch[0].shape[1]+int(mask-1))), dtype=np.uint8)
+			for i in range(3):
+				ch_add[0][i] = np.c_[z_c, ch[i], z_c]
+				ch_add[1][i] = np.r_[z_r, ch_add[0][i], z_r]
+			return ch_add[1]
+
+		b, g, r = cv2.split(self.inImg)
+		mask_s = 5
+		mask = np.ones((mask_s, mask_s), dtype=np.uint8)
+		a = padded(mask_s, cv2.split(self.inImg))
+		print(a)
+		# for y in range(self.inImg.shape[0]):
+		# 	for x in range(self.inImg,shape[1]):
+
+		return 0
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
