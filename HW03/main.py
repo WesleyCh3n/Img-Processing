@@ -54,16 +54,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 			for i in range(3):
 				for y in range(ch_ori[i].shape[0]):
 					for x in range(ch_ori[i].shape[1]):
-						ch_ori[i][y, x] = (mask*ch[i][y:y+mask.shape[0], x:x+mask.shape[0]]).sum()*(1/25)
+						ch_ori[i][y, x] = (mask*ch[i][y:y+mask.shape[0], x:x+mask.shape[0]]).sum()*(1/mask.sum())
 			return ch_ori
-		# b, g, r = cv2.split(self.inImg)
+
 		mask_s = 5
 		mask = np.ones((mask_s, mask_s), dtype=np.uint8)
-		# mask = np.array([[0,0,0],[0,1,0],[0,0,0]],dtype=np.uint8)
 		ch_pd = padded(mask_s, cv2.split(self.inImg))
 		b, g, r = correlation(mask, cv2.split(self.inImg), ch_pd)
 		outImg = self.MatToQImage(cv2.merge([b,g,r]))
-		self.imgLb.setPixmap(outImg.scaled(self.imgLb.width(),self.imgLb.height(),Qt.KeepAspectRatio))
+		self.imgLb_out.setPixmap(outImg.scaled(self.imgLb_out.width(),self.imgLb_out.height(),Qt.KeepAspectRatio))
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
