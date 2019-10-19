@@ -13,7 +13,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 	def __init__(self, parent = None):
 		super(MainWindow, self).__init__(parent)
 		self.setupUi(self)
+
 		self.proB.setValue(0)
+		self.sizesB.setRange(1,11)
+		self.sizesB.setSingleStep(2)
+
 		self.threadClass = thread()
 		self.threadClass.val.connect(self.updatePb)
 		self.threadClass.output.connect(self.show_img)
@@ -27,8 +31,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.imgLb.setPixmap(outImg.scaled(self.imgLb.width(),self.imgLb.height(),Qt.KeepAspectRatio))
 
 	def sfLb_click(self):
-		# self.threadClass.path = "/home/y0ch3n/Documents/GitHub/Img-Processing/HW03/bird.jpg"
 		self.threadClass.inMat = self.inImg
+		self.threadClass.sliderValue = self.sizesB.value()
 		self.textB.append("Start")
 		self.threadClass.start()
 
@@ -57,14 +61,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 class thread(QThread):
 	output = pyqtSignal(np.ndarray, str)
 	val = pyqtSignal(int)
+	sliderValue = 1
 	inMat = False
 	def __init__(self, parent = None):
 		super(thread, self).__init__(parent)
 
 	def run(self):
-		# inImg = cv2.imread(self.path)
-		mask_s = 5
-		mask = np.ones((mask_s, mask_s), dtype=np.uint8)*2
+		mask = np.ones((self.sliderValue, self.sliderValue), dtype=np.uint8)
 		def padded(mask, ch):
 			ch_add = [[0,0,0],[0,0,0]]
 			z_c = np.zeros((ch[0].shape[0], int((mask-1)/2)), dtype=np.uint8)
@@ -74,7 +77,7 @@ class thread(QThread):
 				ch_add[1][i] = np.r_[z_r, ch_add[0][i], z_r]
 			return ch_add[1]
 
-		ch_pd = padded(mask_s, cv2.split(self.inMat))
+		ch_pd = padded(self.sliderValue, cv2.split(self.inMat))
 		ch_ori = cv2.split(self.inMat)
 		print(mask)
 		print(mask.sum())
@@ -88,7 +91,7 @@ class thread(QThread):
 		b,g,r=ch_ori
 		outImg = cv2.merge([b,g,r])
 
-		self.output.emit(outImg, "Finish")
+		self.output.emit(outImg, "Finish.\n==========================")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
