@@ -8,19 +8,27 @@ import numpy as np
 import time
 
 class MainWindow(QMainWindow, Ui_MainWindow):
-
+	path = False
+	inImg = False
 	def __init__(self, parent = None):
 		super(MainWindow, self).__init__(parent)
 		self.setupUi(self)
 		self.proB.setValue(0)
 		self.threadClass = thread()
 		self.threadClass.val.connect(self.updatePb)
-		self.threadClass.test.connect(self.show_img)
+		self.threadClass.output.connect(self.show_img)
+		self.actionOpen_File.triggered.connect(self.openImg_click)
 		self.sfLb.clicked.connect(self.sfLb_click)
 
+	def openImg_click(self):
+		self.path = QFileDialog.getOpenFileName(self,"Open file","","Images(*.jpg)")
+		self.inImg = cv2.imread(self.path[0])
+		outImg = self.MatToQImage(self.inImg)
+		self.imgLb.setPixmap(outImg.scaled(self.imgLb.width(),self.imgLb.height(),Qt.KeepAspectRatio))
 
 	def sfLb_click(self):
-		self.threadClass.path = "/home/y0ch3n/Documents/GitHub/Img-Processing/HW03/bird.jpg"
+		# self.threadClass.path = "/home/y0ch3n/Documents/GitHub/Img-Processing/HW03/bird.jpg"
+		self.threadClass.inMat = self.inImg
 		self.textB.append("Start")
 		self.threadClass.start()
 
@@ -47,16 +55,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 				return qimage
 
 class thread(QThread):
-	test = pyqtSignal(np.ndarray, str)
+	output = pyqtSignal(np.ndarray, str)
 	val = pyqtSignal(int)
-	path = False
+	inMat = False
 	def __init__(self, parent = None):
 		super(thread, self).__init__(parent)
 
 	def run(self):
-		inImg = cv2.imread(self.path)
+		# inImg = cv2.imread(self.path)
 		mask_s = 5
-		mask = np.ones((mask_s, mask_s), dtype=np.uint8)
+		mask = np.ones((mask_s, mask_s), dtype=np.uint8)*2
 		def padded(mask, ch):
 			ch_add = [[0,0,0],[0,0,0]]
 			z_c = np.zeros((ch[0].shape[0], int((mask-1)/2)), dtype=np.uint8)
@@ -66,23 +74,25 @@ class thread(QThread):
 				ch_add[1][i] = np.r_[z_r, ch_add[0][i], z_r]
 			return ch_add[1]
 
-		ch_pd = padded(mask_s, cv2.split(inImg))
-		ch_ori = cv2.split(inImg)
+		ch_pd = padded(mask_s, cv2.split(self.inMat))
+		ch_ori = cv2.split(self.inMat)
+		print(mask)
+		print(mask.sum())
 		for i in range(3):
-			for y in range(cv2.split(inImg)[i].shape[0]):
-					for x in range(cv2.split(inImg)[i].shape[1]):
+			for y in range(cv2.split(self.inMat)[i].shape[0]):
+					for x in range(cv2.split(self.inMat)[i].shape[1]):
 						ch_ori[i][y, x] = (mask*ch_pd[i][y:y+mask.shape[0], x:x+mask.shape[0]]).sum()*(1/mask.sum())
-					proInt = int(101*(i*cv2.split(inImg)[i].shape[0]+y)/(3*cv2.split(inImg)[i].shape[0]))
+					proInt = int(101*(i*cv2.split(self.inMat)[i].shape[0]+y)/(3*cv2.split(self.inMat)[i].shape[0]))
 					self.val.emit(proInt)
 
 		b,g,r=ch_ori
 		outImg = cv2.merge([b,g,r])
 
-		self.test.emit(outImg, "Finish")
+		self.output.emit(outImg, "Finish")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     w = MainWindow()
-    w.setStyleSheet("background-color:rgb(40,40,40);color:rgb(150,100,150)")
+    w.setStyleSheet("background-color:rgb(40,40,40);color:rgb(235,219,178)")
     w.show()
     sys.exit(app.exec_())
