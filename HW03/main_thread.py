@@ -12,20 +12,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 	def __init__(self, parent = None):
 		super(MainWindow, self).__init__(parent)
 		self.setupUi(self)
+		self.proB.setValue(0)
 		self.threadClass = thread()
 		self.threadClass.val.connect(self.updatePb)
 		self.threadClass.test.connect(self.show_img)
-		self.sfLb.clicked.connect(self.pB_click)
+		self.sfLb.clicked.connect(self.sfLb_click)
 
 
-	def pB_click(self):
+	def sfLb_click(self):
 		self.threadClass.path = "/home/y0ch3n/Documents/GitHub/Img-Processing/HW03/bird.jpg"
+		self.textB.append("Start")
 		self.threadClass.start()
 
 	def updatePb(self, val):
 		self.proB.setValue(val)
-		
-	def show_img(self, inImg):
+
+	def show_img(self, inImg, str_):
+		self.textB.append(str_)
 		outImg = self.MatToQImage(inImg)
 		self.imgLb_out.setPixmap(outImg.scaled(self.imgLb_out.width(),self.imgLb_out.height(),Qt.KeepAspectRatio))
 
@@ -44,7 +47,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 				return qimage
 
 class thread(QThread):
-	test = pyqtSignal(np.ndarray)
+	test = pyqtSignal(np.ndarray, str)
 	val = pyqtSignal(int)
 	path = False
 	def __init__(self, parent = None):
@@ -75,7 +78,7 @@ class thread(QThread):
 		b,g,r=ch_ori
 		outImg = cv2.merge([b,g,r])
 
-		self.test.emit(outImg)
+		self.test.emit(outImg, "Finish")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

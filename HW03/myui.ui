@@ -34,7 +34,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>150</y>
+        <y>90</y>
         <width>351</width>
         <height>361</height>
        </rect>
@@ -50,7 +50,7 @@
       <property name="geometry">
        <rect>
         <x>400</x>
-        <y>150</y>
+        <y>90</y>
         <width>351</width>
         <height>361</height>
        </rect>
@@ -125,6 +125,48 @@
       </property>
       <property name="value">
        <number>24</number>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>60</y>
+        <width>67</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Origin</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_3">
+      <property name="geometry">
+       <rect>
+        <x>540</x>
+        <y>60</y>
+        <width>67</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Update</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QTextBrowser" name="textB">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>461</y>
+        <width>761</width>
+        <height>71</height>
+       </rect>
       </property>
      </widget>
     </widget>
