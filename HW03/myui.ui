@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>823</width>
-    <height>665</height>
+    <width>821</width>
+    <height>689</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -172,10 +172,10 @@
      <widget class="QPushButton" name="edgePb">
       <property name="geometry">
        <rect>
-        <x>360</x>
+        <x>370</x>
         <y>20</y>
-        <width>111</width>
-        <height>24</height>
+        <width>121</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="text">
@@ -205,7 +205,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>823</width>
+     <width>821</width>
      <height>22</height>
     </rect>
    </property>

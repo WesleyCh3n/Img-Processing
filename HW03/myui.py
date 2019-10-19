@@ -13,7 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(823, 665)
+        MainWindow.resize(821, 689)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
@@ -59,7 +59,7 @@ class Ui_MainWindow(object):
         self.textB.setGeometry(QtCore.QRect(20, 461, 761, 71))
         self.textB.setObjectName("textB")
         self.edgePb = QtWidgets.QPushButton(self.tab)
-        self.edgePb.setGeometry(QtCore.QRect(360, 20, 111, 24))
+        self.edgePb.setGeometry(QtCore.QRect(370, 20, 121, 25))
         self.edgePb.setObjectName("edgePb")
         self.tabWidget.addTab(self.tab, "")
         self.tab_2 = QtWidgets.QWidget()
@@ -70,7 +70,7 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.tab_2, "")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 823, 22))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 821, 22))
         self.menubar.setObjectName("menubar")
         self.menuFile = QtWidgets.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")

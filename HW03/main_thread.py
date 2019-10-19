@@ -3,6 +3,7 @@ from myui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+import qdarkstyle
 import cv2
 import numpy as np
 import time
@@ -25,7 +26,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 		self.threadClass_2 = thread_2()
 		self.threadClass_2.output.connect(self.show_img)
-
+		print(QStyleFactory.keys())
 		self.actionOpen_File.triggered.connect(self.openImg_click)
 		self.sfPb.clicked.connect(self.sfPb_click)
 		self.edgePb.clicked.connect(self.edgePb_click)
@@ -147,6 +148,7 @@ class thread_2(QThread):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     w = MainWindow()
-    w.setStyleSheet("background-color:rgb(40,40,40);color:rgb(235,219,178)")
+    #w.setStyleSheet("background-color:rgb(40,40,40);color:rgb(235,219,178)")
+    app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
     w.show()
     sys.exit(app.exec_())
