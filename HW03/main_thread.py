@@ -20,27 +20,41 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 		self.threadClass = thread()
 		self.threadClass.val.connect(self.updatePb)
+		self.threadClass.msg.connect(self.status)
 		self.threadClass.output.connect(self.show_img)
+
+		self.threadClass_2 = thread_2()
+		self.threadClass_2.output.connect(self.show_img)
+
 		self.actionOpen_File.triggered.connect(self.openImg_click)
-		self.sfLb.clicked.connect(self.sfLb_click)
+		self.sfPb.clicked.connect(self.sfPb_click)
+		self.edgePb.clicked.connect(self.edgePb_click)
 
 	def openImg_click(self):
 		self.path = QFileDialog.getOpenFileName(self,"Open file","","Images(*.jpg)")
 		self.inImg = cv2.imread(self.path[0])
+		self.textB.append("Open image complete")
 		outImg = self.MatToQImage(self.inImg)
 		self.imgLb.setPixmap(outImg.scaled(self.imgLb.width(),self.imgLb.height(),Qt.KeepAspectRatio))
 
-	def sfLb_click(self):
+	def sfPb_click(self):
 		self.threadClass.inMat = self.inImg
 		self.threadClass.sliderValue = self.sizesB.value()
-		self.textB.append("Start")
+		self.textB.append("Correlation Start...")
 		self.threadClass.start()
+
+	def edgePb_click(self):
+		print(type(self.inImg))
+		self.threadClass_2.inMat = self.inImg
+		self.threadClass_2.start()
 
 	def updatePb(self, val):
 		self.proB.setValue(val)
 
-	def show_img(self, inImg, str_):
-		self.textB.append(str_)
+	def status(self, messege):
+		self.textB.append(messege)
+
+	def show_img(self, inImg):
 		outImg = self.MatToQImage(inImg)
 		self.imgLb_out.setPixmap(outImg.scaled(self.imgLb_out.width(),self.imgLb_out.height(),Qt.KeepAspectRatio))
 
@@ -59,15 +73,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 				return qimage
 
 class thread(QThread):
-	output = pyqtSignal(np.ndarray, str)
+	output = pyqtSignal(np.ndarray)
 	val = pyqtSignal(int)
+	msg = pyqtSignal(str)
 	sliderValue = 1
 	inMat = False
 	def __init__(self, parent = None):
 		super(thread, self).__init__(parent)
 
 	def run(self):
-		mask = np.ones((self.sliderValue, self.sliderValue), dtype=np.uint8)
 		def padded(mask, ch):
 			ch_add = [[0,0,0],[0,0,0]]
 			z_c = np.zeros((ch[0].shape[0], int((mask-1)/2)), dtype=np.uint8)
@@ -77,10 +91,12 @@ class thread(QThread):
 				ch_add[1][i] = np.r_[z_r, ch_add[0][i], z_r]
 			return ch_add[1]
 
+		mask = np.ones((self.sliderValue, self.sliderValue), dtype=np.uint8)
+		self.msg.emit("The mask you use is\n"+str(mask))
 		ch_pd = padded(self.sliderValue, cv2.split(self.inMat))
 		ch_ori = cv2.split(self.inMat)
-		print(mask)
-		print(mask.sum())
+		self.msg.emit("Correlation Start...\nPlease wait for the progress...")
+
 		for i in range(3):
 			for y in range(cv2.split(self.inMat)[i].shape[0]):
 					for x in range(cv2.split(self.inMat)[i].shape[1]):
@@ -91,7 +107,42 @@ class thread(QThread):
 		b,g,r=ch_ori
 		outImg = cv2.merge([b,g,r])
 
-		self.output.emit(outImg, "Finish.\n==========================")
+		self.output.emit(outImg)
+		self.msg.emit("Progress Complete!")
+
+class thread_2(QThread):
+	output = pyqtSignal(np.ndarray)
+	# val = pyqtSignal(int)
+	# sliderValue = 1
+	inMat = False
+	def __init__(self, parent = None):
+		super(thread_2, self).__init__(parent)
+
+	def run(self):
+		def padded(mask, ch):
+			ch_add = [0, 0] #fisrt element add_column second Final output
+			z_c = np.zeros((ch[0].shape[0], int((mask-1)/2)), dtype=np.uint8)
+			z_r = np.zeros((int((mask-1)/2), (ch.shape[1]+int(mask-1))), dtype=np.uint8)
+			ch_add[0] = np.c_[z_c, ch, z_c]
+			ch_add[1] = np.r_[z_r, ch_add[0], z_r]
+			return ch_add[1]
+		# Convert to grayscale loss dimension, use np.newaxis and repeat to expand to 3d dimension
+		grayImg = cv2.cvtColor(self.inMat, cv2.COLOR_BGR2GRAY)
+		lgMask = np.array([[0, 0, 1, 0, 0],\
+						   [0, 1, 2, 1, 0],\
+						   [1, 2,-16,2, 1],\
+						   [0, 1, 2, 1, 0],\
+						   [0, 0, 1, 0, 0],])*(-1)
+		
+		pdMat = padded(5, grayImg)
+		afterMat = grayImg
+		for y in range(self.inMat.shape[0]):
+			for x in range(self.inMat.shape[1]):
+				afterMat[y, x] = (lgMask*pdMat[y:y+lgMask.shape[0], x:x+lgMask.shape[0]]).sum()
+		print(afterMat)
+
+		outImg = np.repeat(afterMat[:, :, np.newaxis], 3, axis=2)
+		self.output.emit(outImg)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

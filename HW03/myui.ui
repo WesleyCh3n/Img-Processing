@@ -62,7 +62,7 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QPushButton" name="sfLb">
+     <widget class="QPushButton" name="sfPb">
       <property name="geometry">
        <rect>
         <x>260</x>
@@ -167,6 +167,19 @@
         <width>761</width>
         <height>71</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="edgePb">
+      <property name="geometry">
+       <rect>
+        <x>360</x>
+        <y>20</y>
+        <width>111</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Edge Detection</string>
       </property>
      </widget>
     </widget>
