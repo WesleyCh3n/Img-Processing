@@ -5,27 +5,29 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 import cv2
 import numpy as np
+import time
 
 class MainWindow(QMainWindow, Ui_MainWindow):
-	inImg = False
 
 	def __init__(self, parent = None):
 		super(MainWindow, self).__init__(parent)
 		self.setupUi(self)
+		self.threadClass = thread()
+		self.threadClass.val.connect(self.updatePb)
+		self.threadClass.test.connect(self.show_img)
+		self.sfLb.clicked.connect(self.pB_click)
 
-		# self.inImg = cv2.imread('/Users/YoChen/Documents/GitHub/Img-Processing/HW03/bird.jpg')
-		self.inImg = cv2.imread('/home/y0ch3n/Documents/GitHub/Img-Processing/HW03/bird.jpg')
-		outImg = self.MatToQImage(self.inImg)
-		self.imgLb.setPixmap(outImg.scaled(self.imgLb.width(),self.imgLb.height(),Qt.KeepAspectRatio))
 
-		self.actionOpen_File.triggered.connect(self.openImg_click)
-		self.sfLb.clicked.connect(self.sfLb_click)
+	def pB_click(self):
+		self.threadClass.path = "/home/y0ch3n/Documents/GitHub/Img-Processing/HW03/bird.jpg"
+		self.threadClass.start()
 
-	def openImg_click(self):
-		# path = QFileDialog.getOpenFileName(self,"Open file","","Images(*.jpg)")
-		# self.inImg = cv2.imread(path[0])
-		outImg = self.MatToQImage(self.inImg)
-		self.imgLb.setPixmap(outImg.scaled(self.imgLb.width(),self.imgLb.height(),Qt.KeepAspectRatio))
+	def updatePb(self, val):
+		self.proB.setValue(val)
+		
+	def show_img(self, inImg):
+		outImg = self.MatToQImage(inImg)
+		self.imgLb_out.setPixmap(outImg.scaled(self.imgLb_out.width(),self.imgLb_out.height(),Qt.KeepAspectRatio))
 
 	def MatToQImage(self, mat, swapped=True, qpixmap=True):
 		height, width = mat.shape[:2]
@@ -41,7 +43,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 				qimage = qimage.rgbSwapped()
 				return qimage
 
-	def sfLb_click(self):
+class thread(QThread):
+	test = pyqtSignal(np.ndarray)
+	val = pyqtSignal(int)
+	path = False
+	def __init__(self, parent = None):
+		super(thread, self).__init__(parent)
+
+	def run(self):
+		inImg = cv2.imread(self.path)
 		mask_s = 5
 		mask = np.ones((mask_s, mask_s), dtype=np.uint8)
 		def padded(mask, ch):
@@ -53,17 +63,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 				ch_add[1][i] = np.r_[z_r, ch_add[0][i], z_r]
 			return ch_add[1]
 
-		def correlation(mask, ch_ori, ch):
-			for i in range(3):
-				for y in range(ch_ori[i].shape[0]):
-					for x in range(ch_ori[i].shape[1]):
-						ch_ori[i][y, x] = (mask*ch[i][y:y+mask.shape[0], x:x+mask.shape[0]]).sum()*(1/mask.sum())
-			return ch_ori
-		ch_pd = padded(mask_s, cv2.split(self.inImg))
-		b, g, r = correlation(mask, cv2.split(self.inImg), ch_pd)
-		outImg = self.MatToQImage(cv2.merge([b,g,r]))
-		self.imgLb_out.setPixmap(outImg.scaled(self.imgLb_out.width(),self.imgLb_out.height(),Qt.KeepAspectRatio))
-		
+		ch_pd = padded(mask_s, cv2.split(inImg))
+		ch_ori = cv2.split(inImg)
+		for i in range(3):
+			for y in range(cv2.split(inImg)[i].shape[0]):
+					for x in range(cv2.split(inImg)[i].shape[1]):
+						ch_ori[i][y, x] = (mask*ch_pd[i][y:y+mask.shape[0], x:x+mask.shape[0]]).sum()*(1/mask.sum())
+					proInt = int(101*(i*cv2.split(inImg)[i].shape[0]+y)/(3*cv2.split(inImg)[i].shape[0]))
+					self.val.emit(proInt)
+
+		b,g,r=ch_ori
+		outImg = cv2.merge([b,g,r])
+
+		self.test.emit(outImg)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

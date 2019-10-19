@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>802</width>
-    <height>619</height>
+    <width>812</width>
+    <height>665</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,8 +19,8 @@
      <rect>
       <x>0</x>
       <y>10</y>
-      <width>781</width>
-      <height>571</height>
+      <width>801</width>
+      <height>611</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -33,8 +33,8 @@
      <widget class="QLabel" name="imgLb">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>70</y>
+        <x>20</x>
+        <y>150</y>
         <width>351</width>
         <height>361</height>
        </rect>
@@ -50,7 +50,7 @@
       <property name="geometry">
        <rect>
         <x>400</x>
-        <y>70</y>
+        <y>150</y>
         <width>351</width>
         <height>361</height>
        </rect>
@@ -65,7 +65,7 @@
      <widget class="QPushButton" name="sfLb">
       <property name="geometry">
        <rect>
-        <x>190</x>
+        <x>260</x>
         <y>20</y>
         <width>91</width>
         <height>24</height>
@@ -78,9 +78,9 @@
      <widget class="QTextEdit" name="textE">
       <property name="geometry">
        <rect>
-        <x>100</x>
+        <x>110</x>
         <y>20</y>
-        <width>61</width>
+        <width>51</width>
         <height>24</height>
        </rect>
       </property>
@@ -96,7 +96,7 @@
        <rect>
         <x>10</x>
         <y>24</y>
-        <width>81</width>
+        <width>91</width>
         <height>16</height>
        </rect>
       </property>
@@ -104,14 +104,27 @@
        <string>Coefficients :</string>
       </property>
      </widget>
-     <widget class="QTextBrowser" name="textB">
+     <widget class="QSpinBox" name="sizesB">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>20</y>
+        <width>48</width>
+        <height>26</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="proB">
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>440</y>
-        <width>721</width>
-        <height>101</height>
+        <y>550</y>
+        <width>761</width>
+        <height>23</height>
        </rect>
+      </property>
+      <property name="value">
+       <number>24</number>
       </property>
      </widget>
     </widget>
@@ -137,7 +150,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>802</width>
+     <width>812</width>
      <height>22</height>
     </rect>
    </property>
