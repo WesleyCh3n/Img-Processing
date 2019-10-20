@@ -16,7 +16,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.setupUi(self)
 
 		self.proB.setValue(0)
-		self.sizesB.setRange(1,11)
+
+		self.sizesB.setValue(3)
+		self.sizesB.setRange(3,21)
 		self.sizesB.setSingleStep(2)
 
 		self.threadClass = thread()
@@ -27,15 +29,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.threadClass_2 = thread_2()
 		self.threadClass_2.output.connect(self.show_img)
 
-		self.tableWidget.setColumnCount(5)
-		self.tableWidget.setRowCount(5)
-		# self.model = QStandardItemModel(5,5,self)
-		# self.tableWidget.setModel(model)
-		# for row in range(5):
-		# 	for col in range(10):
-		# 		item = QtGui.QStandardItem((row, col))
-		# 		self.model.setItem(row, col, item)
-
+		self.tableWidget.setColumnCount(3)
+		self.tableWidget.setRowCount(3)
+		for x in range(3):
+			for y in range(3):
+				self.tableWidget.setItem(x,y, QTableWidgetItem("1"))
 
 		self.actionOpen_File.triggered.connect(self.openImg_click)
 		self.sfPb.clicked.connect(self.sfPb_click)
@@ -44,6 +42,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.midPb.clicked.connect(self.midPb_click)
 		self.minPb.clicked.connect(self.minPb_click)
 		self.maxPb.clicked.connect(self.maxPb_click)
+		self.sizesB.valueChanged.connect(self.sizesB_valueChanged)
 
 	def openImg_click(self):
 		self.path = QFileDialog.getOpenFileName(self,"Open file","","Images(*.jpg)")
@@ -52,9 +51,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		outImg = self.MatToQImage(self.inImg)
 		self.imgLb.setPixmap(outImg.scaled(self.imgLb.width(),self.imgLb.height(),Qt.KeepAspectRatio))
 
+	def sizesB_valueChanged(self):
+		size = self.sizesB.value()
+		self.tableWidget.setColumnCount(size)
+		self.tableWidget.setRowCount(size)
+		for x in range(size):
+			for y in range(size):
+				self.tableWidget.setItem(x,y, QTableWidgetItem("1"))
+
 	def sfPb_click(self):
+		size = self.sizesB.value()
+		mask = np.ones((size, size), dtype = np.uint8)		
+		for x in range(size):
+			for y in range(size):
+				mask[x, y] = int(self.tableWidget.item(x,y).text())
+
 		self.threadClass.inMat = self.inImg
-		self.threadClass.sliderValue = self.sizesB.value()
+		self.threadClass.mask = mask
+		# self.threadClass.sliderValue = self.sizesB.value()
 		self.textB.append("Correlation Start...")
 		self.threadClass.start()
 
@@ -113,7 +127,7 @@ class thread(QThread):
 	output = pyqtSignal(np.ndarray)
 	val = pyqtSignal(int)
 	msg = pyqtSignal(str)
-	sliderValue = 1
+	mask = False
 	inMat = False
 	def __init__(self, parent = None):
 		super(thread, self).__init__(parent)
@@ -128,16 +142,17 @@ class thread(QThread):
 				ch_add[1][i] = np.r_[z_r, ch_add[0][i], z_r]
 			return ch_add[1]
 
-		mask = np.ones((self.sliderValue, self.sliderValue), dtype=np.uint8)
-		self.msg.emit("The mask you use is\n"+str(mask))
-		ch_pd = padded(self.sliderValue, cv2.split(self.inMat))
+		# mask = np.ones((self.sliderValue, self.sliderValue), dtype=np.uint8)
+		self.msg.emit("The mask you use is\n"+str(self.mask))
+		print(self.mask)
+		ch_pd = padded(self.mask.shape[0], cv2.split(self.inMat))
 		ch_ori = cv2.split(self.inMat)
 		self.msg.emit("Correlation Start...\nPlease wait for the progress...")
 
 		for i in range(3):
 			for y in range(cv2.split(self.inMat)[i].shape[0]):
 					for x in range(cv2.split(self.inMat)[i].shape[1]):
-						ch_ori[i][y, x] = (mask*ch_pd[i][y:y+mask.shape[0], x:x+mask.shape[0]]).sum()*(1/mask.sum())
+						ch_ori[i][y, x] = (self.mask*ch_pd[i][y:y+self.mask.shape[0], x:x+self.mask.shape[0]]).sum()*(1/self.mask.sum())
 					proInt = int(101*(i*cv2.split(self.inMat)[i].shape[0]+y)/(3*cv2.split(self.inMat)[i].shape[0]))
 					self.val.emit(proInt)
 
