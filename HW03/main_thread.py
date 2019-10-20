@@ -26,10 +26,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 		self.threadClass_2 = thread_2()
 		self.threadClass_2.output.connect(self.show_img)
-		print(QStyleFactory.keys())
+
+		self.tableWidget.setColumnCount(5)
+		self.tableWidget.setRowCount(5)
+		# self.model = QStandardItemModel(5,5,self)
+		# self.tableWidget.setModel(model)
+		# for row in range(5):
+		# 	for col in range(10):
+		# 		item = QtGui.QStandardItem((row, col))
+		# 		self.model.setItem(row, col, item)
+
+
 		self.actionOpen_File.triggered.connect(self.openImg_click)
 		self.sfPb.clicked.connect(self.sfPb_click)
 		self.edgePb.clicked.connect(self.edgePb_click)
+		self.gussPb.clicked.connect(self.gussPb_click)
+		self.midPb.clicked.connect(self.midPb_click)
+		self.minPb.clicked.connect(self.minPb_click)
+		self.maxPb.clicked.connect(self.maxPb_click)
 
 	def openImg_click(self):
 		self.path = QFileDialog.getOpenFileName(self,"Open file","","Images(*.jpg)")
@@ -48,6 +62,28 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		print(type(self.inImg))
 		self.threadClass_2.inMat = self.inImg
 		self.threadClass_2.start()
+
+	def gussPb_click(self):
+		inImg = cv2.GaussianBlur(self.inImg, (5,5), 0)
+		outImg = self.MatToQImage(inImg)
+		self.imgLb_out.setPixmap(outImg.scaled(self.imgLb_out.width(),self.imgLb_out.height(),Qt.KeepAspectRatio))
+
+	def midPb_click(self):
+		inImg = cv2.medianBlur(self.inImg, 9)
+		outImg = self.MatToQImage(inImg)
+		self.imgLb_out.setPixmap(outImg.scaled(self.imgLb_out.width(),self.imgLb_out.height(),Qt.KeepAspectRatio))
+
+	def minPb_click(self):
+		kernel = np.ones((7,7),np.uint8)
+		inImg = cv2.erode(self.inImg, kernel)
+		outImg = self.MatToQImage(inImg)
+		self.imgLb_out.setPixmap(outImg.scaled(self.imgLb_out.width(),self.imgLb_out.height(),Qt.KeepAspectRatio))
+
+	def maxPb_click(self):
+		kernel = np.ones((7,7),np.uint8)
+		inImg = cv2.dilate(self.inImg, kernel)
+		outImg = self.MatToQImage(inImg)
+		self.imgLb_out.setPixmap(outImg.scaled(self.imgLb_out.width(),self.imgLb_out.height(),Qt.KeepAspectRatio))
 
 	def updatePb(self, val):
 		self.proB.setValue(val)
@@ -141,7 +177,7 @@ class thread_2(QThread):
 			for x in range(self.inMat.shape[1]):
 				afterMat[y, x] = (lgMask*pdMat[y:y+lgMask.shape[0], x:x+lgMask.shape[0]]).sum()
 		print(afterMat)
-
+		# printcv2.threshold#(laplace, signImage, 0, 255, cv::THRESH_BINARY);
 		outImg = np.repeat(afterMat[:, :, np.newaxis], 3, axis=2)
 		self.output.emit(outImg)
 
