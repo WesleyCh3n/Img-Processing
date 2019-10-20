@@ -88,11 +88,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 	def edgePb_click(self):
 		if self.path == False: return self.textB.append("Cannot process null image")
 		self.textB.append("Converting image to grayscale...\n\
-			Using Gaussian of 3x3 kernal size...\n\
+			Using Gaussian of 11x11 kernal size...\n\
 			Using Laplacian filter of 5x5 kernal size...\n\
 			The zero-crossing threshold is "+str(self.zeroSl.value()))
 		grayImg = cv2.cvtColor(self.inImg, cv2.COLOR_BGR2GRAY)
-		gus = cv2.GaussianBlur(grayImg, (3,3), 0)
+		gus = cv2.GaussianBlur(grayImg, (11,11), 0)
 		lap = cv2.Laplacian(gus, -1, ksize=5)
 		thresMat = cv2.threshold(lap, self.zeroSl.value(), 255, cv2.THRESH_BINARY)
 		outImg = np.repeat(thresMat[1][:, :, np.newaxis], 3, axis=2)
