@@ -42,6 +42,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.midPb.clicked.connect(self.midPb_click)
 		self.minPb.clicked.connect(self.minPb_click)
 		self.maxPb.clicked.connect(self.maxPb_click)
+		self.LaplaPb.clicked.connect(self.LaplaPb_click)
 		self.sizesB.valueChanged.connect(self.sizesB_valueChanged)
 
 	def openImg_click(self):
@@ -61,14 +62,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 	def sfPb_click(self):
 		size = self.sizesB.value()
-		mask = np.ones((size, size), dtype = np.uint8)		
+		mask = np.ones((size, size), int)#, dtype = np.uint8)		
 		for x in range(size):
 			for y in range(size):
-				mask[x, y] = int(self.tableWidget.item(x,y).text())
-
+				mask[x, y] = int(self.tableWidget.item(x,y).text())	
 		self.threadClass.inMat = self.inImg
 		self.threadClass.mask = mask
-		# self.threadClass.sliderValue = self.sizesB.value()
 		self.textB.append("Correlation Start...")
 		self.threadClass.start()
 
@@ -98,6 +97,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		inImg = cv2.dilate(self.inImg, kernel)
 		outImg = self.MatToQImage(inImg)
 		self.imgLb_out.setPixmap(outImg.scaled(self.imgLb_out.width(),self.imgLb_out.height(),Qt.KeepAspectRatio))
+
+	def LaplaPb_click(self):
+		print(self.cB.isChecked())
+		# grayImg = cv2.cvtColor(self.inImg, cv2.COLOR_BGR2GRAY)
+		# inImg = cv2.Laplacian(grayImg, -1, ksize=5)
+		# outImg = np.repeat(inImg[:, :, np.newaxis], 3, axis=2)
+		# outImg = self.MatToQImage(outImg)
+		# self.imgLb_out.setPixmap(outImg.scaled(self.imgLb_out.width(),self.imgLb_out.height(),Qt.KeepAspectRatio))
 
 	def updatePb(self, val):
 		self.proB.setValue(val)
@@ -192,7 +199,10 @@ class thread_2(QThread):
 			for x in range(self.inMat.shape[1]):
 				afterMat[y, x] = (lgMask*pdMat[y:y+lgMask.shape[0], x:x+lgMask.shape[0]]).sum()
 		print(afterMat)
+		# kernel = np.ones((1,1),np.uint8)
+		# afterMat = cv2.morphologyEx(afterMat,cv2.MORPH_OPEN,kernel)
 		# printcv2.threshold#(laplace, signImage, 0, 255, cv::THRESH_BINARY);
+		afterMat = afterMat/afterMat.max()
 		outImg = np.repeat(afterMat[:, :, np.newaxis], 3, axis=2)
 		self.output.emit(outImg)
 
