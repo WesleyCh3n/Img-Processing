@@ -51,6 +51,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.minPb.clicked.connect(self.minPb_click)
 		self.maxPb.clicked.connect(self.maxPb_click)
 		self.LaplaPb.clicked.connect(self.LaplaPb_click)
+		self.SobelPb.clicked.connect(self.SobelPb_click)
 		self.sizesB.valueChanged.connect(self.sizesB_valueChanged)
 		self.zeroSl.valueChanged.connect(self.zeroSl_valueChanged)
 
@@ -150,6 +151,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.textB.append("Progress Complete!\n========================\n")
 		self.updatePb(100)
 
+	def SobelPb_click(self):
+		if self.path == False: return self.textB.append("Cannot process null image")
+		self.textB.append("Sobel Filter Start...\nThe Mask size is "+str(self.sizesB_2.value())+"x"+str(self.sizesB_2.value()))
+		grayImg = cv2.cvtColor(self.inImg, cv2.COLOR_BGR2GRAY)
+		inImg = cv2.Sobel(grayImg, -1, dx=1, dy=1, ksize=self.sizesB_2.value())
+		outImg = np.repeat(inImg[:, :, np.newaxis], 3, axis=2)
+		outImg = self.MatToQImage(outImg)
+		self.imgLb_out.setPixmap(outImg.scaled(self.imgLb_out.width(),self.imgLb_out.height(),Qt.KeepAspectRatio))
+		self.textB.append("Progress Complete!\n========================\n")
+		self.updatePb(100)
+
 	def updatePb(self, val):
 		self.proB.setValue(val)
 
@@ -207,15 +219,21 @@ class thread(QThread):
 			for y in range(cv2.split(self.inMat)[i].shape[0]):
 					for x in range(cv2.split(self.inMat)[i].shape[1]):
 						if self.avgCheck:
-							ch_ori[i][y, x] = (self.mask*ch_pd[i][y:y+self.mask.shape[0], x:x+self.mask.shape[0]]).sum()*(1/self.mask.sum())
+							newColor = (self.mask*ch_pd[i][y:y+self.mask.shape[0], x:x+self.mask.shape[0]]).sum()*(1/self.mask.sum())
+							if newColor >= 255 : ch_ori[i][y, x]=255
+							elif newColor <= 0 : ch_ori[i][y, x]=0
+							else : ch_ori[i][y, x] = newColor
 						else:
-							ch_ori[i][y, x] = (self.mask*ch_pd[i][y:y+self.mask.shape[0], x:x+self.mask.shape[0]]).sum()
+							newColor = (self.mask*ch_pd[i][y:y+self.mask.shape[0], x:x+self.mask.shape[0]]).sum()
+							if newColor >= 255 : ch_ori[i][y, x]=255
+							elif newColor <= 0 : ch_ori[i][y, x]=0
+							else : ch_ori[i][y, x] = newColor
+
 					proInt = int(101*(i*cv2.split(self.inMat)[i].shape[0]+y)/(3*cv2.split(self.inMat)[i].shape[0]))
 					self.val.emit(proInt)
 
 		b,g,r=ch_ori
 		outImg = cv2.merge([b,g,r])
-
 		self.output.emit(outImg)
 		self.msg.emit("Progress Complete!\n========================\n")
 
