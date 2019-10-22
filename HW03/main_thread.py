@@ -59,6 +59,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 	def openImg_click(self):
 		self.path = QFileDialog.getOpenFileName(self,"Open file","","Images(*.jpg)")
+		if self.path[0] == '': return QMessageBox.warning(self, "WARNING", "The input image is empty")
 		self.inImg = cv2.imread(self.path[0])
 		self.textB.append("Open image complete")
 		outImg = self.MatToQImage(self.inImg)
