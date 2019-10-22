@@ -52,7 +52,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.maxPb.clicked.connect(self.maxPb_click)
 		self.LaplaPb.clicked.connect(self.LaplaPb_click)
 		self.SobelxPb.clicked.connect(self.SobelxPb_click)
-		self.SobelyPb.clicked.connect(self.SobelyPb_click)
+		self.SobelyPb.clicked.connect(self.SobelxyPb_click)
 		self.SobelxyPb.clicked.connect(self.SobelxyPb_click)
 		self.sizesB.valueChanged.connect(self.sizesB_valueChanged)
 		self.zeroSl.valueChanged.connect(self.zeroSl_valueChanged)
