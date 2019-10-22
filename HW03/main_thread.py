@@ -51,7 +51,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.minPb.clicked.connect(self.minPb_click)
 		self.maxPb.clicked.connect(self.maxPb_click)
 		self.LaplaPb.clicked.connect(self.LaplaPb_click)
-		self.SobelPb.clicked.connect(self.SobelPb_click)
+		self.SobelxPb.clicked.connect(self.SobelxPb_click)
+		self.SobelyPb.clicked.connect(self.SobelyPb_click)
+		self.SobelxyPb.clicked.connect(self.SobelxyPb_click)
 		self.sizesB.valueChanged.connect(self.sizesB_valueChanged)
 		self.zeroSl.valueChanged.connect(self.zeroSl_valueChanged)
 
@@ -151,7 +153,29 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.textB.append("Progress Complete!\n========================\n")
 		self.updatePb(100)
 
-	def SobelPb_click(self):
+	def SobelxPb_click(self):
+		if self.path == False: return self.textB.append("Cannot process null image")
+		self.textB.append("Sobel Filter Start...\nThe Mask size is "+str(self.sizesB_2.value())+"x"+str(self.sizesB_2.value()))
+		grayImg = cv2.cvtColor(self.inImg, cv2.COLOR_BGR2GRAY)
+		inImg = cv2.Sobel(grayImg, -1, dx=1, dy=0, ksize=self.sizesB_2.value())
+		outImg = np.repeat(inImg[:, :, np.newaxis], 3, axis=2)
+		outImg = self.MatToQImage(outImg)
+		self.imgLb_out.setPixmap(outImg.scaled(self.imgLb_out.width(),self.imgLb_out.height(),Qt.KeepAspectRatio))
+		self.textB.append("Progress Complete!\n========================\n")
+		self.updatePb(100)
+
+	def SobelyPb_click(self):
+		if self.path == False: return self.textB.append("Cannot process null image")
+		self.textB.append("Sobel Filter Start...\nThe Mask size is "+str(self.sizesB_2.value())+"x"+str(self.sizesB_2.value()))
+		grayImg = cv2.cvtColor(self.inImg, cv2.COLOR_BGR2GRAY)
+		inImg = cv2.Sobel(grayImg, -1, dx=0, dy=1, ksize=self.sizesB_2.value())
+		outImg = np.repeat(inImg[:, :, np.newaxis], 3, axis=2)
+		outImg = self.MatToQImage(outImg)
+		self.imgLb_out.setPixmap(outImg.scaled(self.imgLb_out.width(),self.imgLb_out.height(),Qt.KeepAspectRatio))
+		self.textB.append("Progress Complete!\n========================\n")
+		self.updatePb(100)	
+
+	def SobelxyPb_click(self):
 		if self.path == False: return self.textB.append("Cannot process null image")
 		self.textB.append("Sobel Filter Start...\nThe Mask size is "+str(self.sizesB_2.value())+"x"+str(self.sizesB_2.value()))
 		grayImg = cv2.cvtColor(self.inImg, cv2.COLOR_BGR2GRAY)

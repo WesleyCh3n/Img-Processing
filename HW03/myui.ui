@@ -221,7 +221,7 @@
         <x>10</x>
         <y>10</y>
         <width>221</width>
-        <height>89</height>
+        <height>81</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_2">
@@ -265,55 +265,48 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>120</y>
+        <y>90</y>
         <width>221</width>
-        <height>216</height>
+        <height>241</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_3">
-       <item row="11" column="0" colspan="2">
-        <widget class="QPushButton" name="minPb">
-         <property name="text">
-          <string>Min Filter</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="0" colspan="2">
-        <widget class="QPushButton" name="midPb">
-         <property name="text">
-          <string>Median Filter</string>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="0" colspan="2">
-        <widget class="QPushButton" name="maxPb">
-         <property name="text">
-          <string>Max Filter</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0" colspan="2">
-        <widget class="QPushButton" name="LaplaPb">
-         <property name="text">
-          <string>Laplacain</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QSpinBox" name="sizesB_2">
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0" colspan="2">
+       <item row="0" column="0" colspan="3">
         <widget class="Line" name="line_2">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
+       <item row="1" column="2">
+        <widget class="QSpinBox" name="sizesB_2">
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="2">
+        <widget class="QPushButton" name="SobelxyPb">
+         <property name="text">
+          <string>Sobel x+y</string>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="0" colspan="3">
+        <widget class="QPushButton" name="midPb">
+         <property name="text">
+          <string>Median Filter</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QPushButton" name="SobelyPb">
+         <property name="text">
+          <string>Sobel y</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="2">
         <widget class="QLabel" name="label_6">
          <property name="text">
           <string>Mask Size</string>
@@ -323,17 +316,38 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="0" colspan="2">
-        <widget class="QPushButton" name="gussPb">
+       <item row="13" column="0" colspan="3">
+        <widget class="QPushButton" name="maxPb">
          <property name="text">
-          <string>Gaussian</string>
+          <string>Max Filter</string>
          </property>
         </widget>
        </item>
-       <item row="6" column="0" colspan="2">
-        <widget class="QPushButton" name="SobelPb">
+       <item row="6" column="0">
+        <widget class="QPushButton" name="SobelxPb">
          <property name="text">
-          <string>Sobel</string>
+          <string>Sobel x</string>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="0" colspan="3">
+        <widget class="QPushButton" name="minPb">
+         <property name="text">
+          <string>Min Filter</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0" colspan="3">
+        <widget class="QPushButton" name="LaplaPb">
+         <property name="text">
+          <string>Laplacain</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0" colspan="3">
+        <widget class="QPushButton" name="gussPb">
+         <property name="text">
+          <string>Gaussian</string>
          </property>
         </widget>
        </item>
