@@ -12,7 +12,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 	path = False
 	inImg = False
 	def __init__(self, parent = None):
-		super(MainWindow, self).__init__(parent)
+		super().__init__(parent)
 		self.setupUi(self)
 
 		self.proB.setValue(0)
