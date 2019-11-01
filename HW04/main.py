@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-from matplotlib import pyplot as plt
+import matplotlib.pyplot as plt
 
 img = cv2.imread('C1HW04_IMG01_2019.jpg',0)
 print(img.shape)
