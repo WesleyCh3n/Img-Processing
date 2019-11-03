@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="fftBn">
+   <widget class="QPushButton" name="dftBn">
     <property name="geometry">
      <rect>
       <x>40</x>
@@ -30,14 +30,53 @@
    <widget class="QLabel" name="imgShowLb">
     <property name="geometry">
      <rect>
-      <x>200</x>
-      <y>40</y>
-      <width>441</width>
-      <height>401</height>
+      <x>390</x>
+      <y>110</y>
+      <width>351</width>
+      <height>331</height>
      </rect>
     </property>
     <property name="text">
      <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="inputLb">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>110</y>
+      <width>351</width>
+      <height>331</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="idftBn">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>30</y>
+      <width>80</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>iDFT</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="idLowBn">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>30</y>
+      <width>101</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ideal filter Low</string>
     </property>
    </widget>
   </widget>

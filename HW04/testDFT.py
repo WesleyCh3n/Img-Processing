@@ -11,6 +11,7 @@ dft_shift = np.fft.fftshift(dft)
 print(f"This is dft_shift shape {dft_shift.shape}")
 magnitude_spectrum = 20*np.log(cv2.magnitude(dft_shift[:,:,0],dft_shift[:,:,1]))
 print(f"This is magnitude_spectrum shape {magnitude_spectrum.shape}")
+print(magnitude_spectrum.max())
 
 plt.subplot(121),plt.imshow(img, cmap = 'gray')
 plt.title('Input Image'), plt.xticks([]), plt.yticks([])

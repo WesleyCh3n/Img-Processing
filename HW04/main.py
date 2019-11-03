@@ -12,19 +12,61 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		super().__init__(parent)
 		self.setupUi(self)
 		self.path = False
-		self.actionOpen_File.triggered.connect(self.openImg_click)
+		self.actionOpen_File.triggered.connect(self.openImg_clicked)
+		self.dftBn.clicked.connect(self.fftBn_clicked)
+		self.idLowBn.clicked.connect(self.idLowBn_clicked)
 
-	def openImg_click(self):
+		# inImg = cv2.imread('C1HW04_IMG01_2019.jpg', 0)
+
+	def openImg_clicked(self):
 		self.path = QFileDialog.getOpenFileName(self,"Open file","","Images(*.jpg)")
 		if self.path[0] == '': return QMessageBox.warning(self, "WARNING", "The input image is empty")
 		self.inImg = cv2.imread(self.path[0])
 		outImg = self.MatToQImage(self.inImg)
+		self.inputLb.setPixmap(outImg.scaled(self.inputLb.width(),self.inputLb.height(),Qt.KeepAspectRatio))
+
+	def fftBn_clicked(self):
+		inImg = cv2.imread(self.path[0], 0)
+		dft = cv2.dft(np.float32(inImg), flags = cv2.DFT_COMPLEX_OUTPUT)
+		dft_shift = np.fft.fftshift(dft)
+		magnitude_spectrum, ang1 = cv2.cartToPolar(dft_shift[:,:,0], dft_shift[:,:,1], angleInDegrees=True) 
+		magnitude_spectrum = 20*np.log(magnitude_spectrum)
+		cv2.normalize(magnitude_spectrum, magnitude_spectrum,  0, 255,cv2.NORM_MINMAX)
+		ang = cv2.phase(dft[:,:,0], dft[:,:,0])
+		# fMin = np.log(1+cv2.magnitude(dft_shift[:,:,0],dft_shift[:,:,1]).min())
+		# fMax = np.log(1+cv2.magnitude(dft_shift[:,:,0],dft_shift[:,:,1]).max())
+		# fFinal = 255*((np.log(1+cv2.magnitude(dft_shift[:,:,0],dft_shift[:,:,1]))-fMin)/(fMax-fMin))
+		# cv2.normalize(fFinal, fFinal,  0, 255, cv2.NORM_MINMAX)
+		cv2.normalize(ang, ang, 0, 255,cv2.NORM_MINMAX)
+		print(ang.max())
+		back = cv2.idft(dft,flags=cv2.DFT_SCALE | cv2.DFT_REAL_OUTPUT)
+		outImg1 = self.MatToQImage(ang)
+		outImg = self.MatToQImage(magnitude_spectrum)
+		self.inputLb.setPixmap(outImg.scaled(self.inputLb.width(),self.inputLb.height(),Qt.KeepAspectRatio))
+		self.imgShowLb.setPixmap(outImg1.scaled(self.imgShowLb.width(),self.imgShowLb.height(),Qt.KeepAspectRatio))
+
+	def idLowBn_clicked(self):
+		inImg = cv2.imread(self.path[0], 0)
+		dft = cv2.dft(np.float32(inImg), flags = cv2.DFT_COMPLEX_OUTPUT)
+		dft_shift = np.fft.fftshift(dft)
+		rows, cols = inImg.shape
+		crow, ccol = int(rows/2) , int(cols/2)
+		mask = np.zeros((rows, cols, 2), np.uint8)
+		mask[crow-50:crow+50, ccol-50:ccol+50] = 1
+		filterOut = dft_shift*mask
+		f_ishift = np.fft.ifftshift(filterOut)
+		back = cv2.idft(f_ishift,flags=cv2.DFT_SCALE | cv2.DFT_REAL_OUTPUT)
+		outImg = self.MatToQImage(back)
 		self.imgShowLb.setPixmap(outImg.scaled(self.imgShowLb.width(),self.imgShowLb.height(),Qt.KeepAspectRatio))
 
+
 	def MatToQImage(self, mat, swapped=True, qpixmap=True):
-		height, width = mat.shape[:2]
-		dim = 1 if mat.ndim == 2 else mat.shape[2]
-		bytesPerLine = dim * width
+		if mat.ndim == 2:
+			mat = np.repeat(mat[:, :, np.newaxis], 3, axis=2)
+		if mat.dtype != np.uint8:
+			mat = mat.astype(np.uint8)
+		height, width, channel = mat.shape
+		bytesPerLine = 3 * width
 		qimage = QtGui.QImage(mat.data, width, height, bytesPerLine, QtGui.QImage.Format_RGB888)
 		if swapped:
 			if qpixmap:
