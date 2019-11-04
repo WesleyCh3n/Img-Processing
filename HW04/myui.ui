@@ -79,6 +79,19 @@
      <string>ideal filter Low</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="bLowBn">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>30</y>
+      <width>101</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Butterworth Low</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

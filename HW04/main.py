@@ -15,7 +15,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.actionOpen_File.triggered.connect(self.openImg_clicked)
 		self.dftBn.clicked.connect(self.fftBn_clicked)
 		self.idLowBn.clicked.connect(self.idLowBn_clicked)
-
+		self.bLowBn.clicked.connect(self.bLowBn_clicked)
 		# inImg = cv2.imread('C1HW04_IMG01_2019.jpg', 0)
 
 	def openImg_clicked(self):
@@ -52,13 +52,36 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		rows, cols = inImg.shape
 		crow, ccol = int(rows/2) , int(cols/2)
 		mask = np.zeros((rows, cols, 2), np.uint8)
-		mask[crow-50:crow+50, ccol-50:ccol+50] = 1
+		mask[crow-30:crow+30, ccol-30:ccol+30] = 1
 		filterOut = dft_shift*mask
 		f_ishift = np.fft.ifftshift(filterOut)
 		back = cv2.idft(f_ishift,flags=cv2.DFT_SCALE | cv2.DFT_REAL_OUTPUT)
+		back[back <= 0] = 0
+		back[back >= 255] = 255
 		outImg = self.MatToQImage(back)
 		self.imgShowLb.setPixmap(outImg.scaled(self.imgShowLb.width(),self.imgShowLb.height(),Qt.KeepAspectRatio))
 
+	def bLowBn_clicked(self):
+		inImg = cv2.imread(self.path[0], 0)
+		dft = cv2.dft(np.float32(inImg), flags = cv2.DFT_COMPLEX_OUTPUT)
+		dft_shift = np.fft.fftshift(dft)
+		rows, cols = inImg.shape
+		crow, ccol = int(rows/2) , int(cols/2)
+		mask = np.zeros((rows, cols), np.float32)
+		for u in range(rows):
+			for v in range(cols):
+				radius = (((u - crow)/2)**2+((v - ccol)/2)**2)**(1/2)
+				mask[u, v] = 1.0/((1+(radius/0.1))**2)
+		mask = np.repeat(mask[:, :, np.newaxis], 2, axis=2)
+		filterOut = dft_shift*mask
+		f_ishift = np.fft.ifftshift(filterOut)
+		back = cv2.idft(f_ishift,flags=cv2.DFT_SCALE | cv2.DFT_REAL_OUTPUT)
+		back[back <= 0] = 0
+		back[back >= 255] = 255
+		outImg = self.MatToQImage(back)
+		self.imgShowLb.setPixmap(outImg.scaled(self.imgShowLb.width(),self.imgShowLb.height(),Qt.KeepAspectRatio))
+
+	# def 
 
 	def MatToQImage(self, mat, swapped=True, qpixmap=True):
 		if mat.ndim == 2:
