@@ -157,6 +157,19 @@
      <string>Homomophic</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="motionBlurBn">
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>40</y>
+      <width>101</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Motion Blur</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

@@ -22,10 +22,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.bHighBn.clicked.connect(self.bHighBn_clicked)
 		self.GauHighBn.clicked.connect(self.GauHighBn_clicked)
 		self.homoBn.clicked.connect(self.homoBn_clicked)
+		self.motionBlurBn.clicked.connect(self.motionBlurBn_clicked)
 		# inImg = cv2.imread('C1HW04_IMG01_2019.jpg', 0)
 
 	def openImg_clicked(self):
-		self.path = QFileDialog.getOpenFileName(self,"Open file","","Images(*.jpg)")
+		self.path = QFileDialog.getOpenFileName(self,"Open file","","Images(*.jpg *.bmp)")
 		if self.path[0] == '': return QMessageBox.warning(self, "WARNING", "The input image is empty")
 		self.inImg = cv2.imread(self.path[0])
 		outImg = self.MatToQImage(self.inImg)
@@ -179,7 +180,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		back = cv2.idft(f_ishift,flags=cv2.DFT_SCALE | cv2.DFT_REAL_OUTPUT)
 		outImg = self.MatToQImage(back)
 		self.outputLb.setPixmap(outImg.scaled(self.outputLb.width(),self.outputLb.height(),Qt.KeepAspectRatio))
-		
+
+	def motionBlurBn_clicked(self):
+		inImg = cv2.imread(self.path[0], 0)
+		mask = np.diag(np.diag(np.ones((100,100), dtype=np.float32)/100))
+		result = cv2.filter2D(inImg, -1, mask)
+		outImg = self.MatToQImage(result)
+		self.outputLb.setPixmap(outImg.scaled(self.outputLb.width(),self.outputLb.height(),Qt.KeepAspectRatio))
+
+
 	def MatToQImage(self, mat, swapped=True, qpixmap=True):
 		mat[mat >= 255] = 255
 		mat[mat <= 0] = 0
