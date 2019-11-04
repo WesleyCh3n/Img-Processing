@@ -71,13 +71,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		for u in range(rows):
 			for v in range(cols):
 				radius = (((u - crow)/2)**2+((v - ccol)/2)**2)**(1/2)
-				mask[u, v] = 1.0/((1+(radius/0.1))**2)
+				mask[u, v] = 1.0/((1+(radius/40))**4)
 		mask = np.repeat(mask[:, :, np.newaxis], 2, axis=2)
 		filterOut = dft_shift*mask
 		f_ishift = np.fft.ifftshift(filterOut)
 		back = cv2.idft(f_ishift,flags=cv2.DFT_SCALE | cv2.DFT_REAL_OUTPUT)
-		back[back <= 0] = 0
-		back[back >= 255] = 255
 		outImg = self.MatToQImage(back)
 		self.imgShowLb.setPixmap(outImg.scaled(self.imgShowLb.width(),self.imgShowLb.height(),Qt.KeepAspectRatio))
 
