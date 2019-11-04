@@ -23,6 +23,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.GauHighBn.clicked.connect(self.GauHighBn_clicked)
 		self.homoBn.clicked.connect(self.homoBn_clicked)
 		self.motionBlurBn.clicked.connect(self.motionBlurBn_clicked)
+		self.WeinerBn.clicked.connect(self.WeinerBn_clicked)
 		# inImg = cv2.imread('C1HW04_IMG01_2019.jpg', 0)
 
 	def openImg_clicked(self):
@@ -40,12 +41,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		magnitude_spectrum = 20*np.log(magnitude_spectrum)
 		cv2.normalize(magnitude_spectrum, magnitude_spectrum,  0, 255,cv2.NORM_MINMAX)
 		ang = cv2.phase(dft[:,:,0], dft[:,:,0])
+
 		# fMin = np.log(1+cv2.magnitude(dft_shift[:,:,0],dft_shift[:,:,1]).min())
 		# fMax = np.log(1+cv2.magnitude(dft_shift[:,:,0],dft_shift[:,:,1]).max())
 		# fFinal = 255*((np.log(1+cv2.magnitude(dft_shift[:,:,0],dft_shift[:,:,1]))-fMin)/(fMax-fMin))
 		# cv2.normalize(fFinal, fFinal,  0, 255, cv2.NORM_MINMAX)
+
 		cv2.normalize(ang, ang, 0, 255,cv2.NORM_MINMAX)
-		print(ang.max())
+		# print(ang.max())
 		back = cv2.idft(dft,flags=cv2.DFT_SCALE | cv2.DFT_REAL_OUTPUT)
 		outImg1 = self.MatToQImage(ang)
 		outImg = self.MatToQImage(magnitude_spectrum)
@@ -183,11 +186,35 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 	def motionBlurBn_clicked(self):
 		inImg = cv2.imread(self.path[0], 0)
-		mask = np.diag(np.diag(np.ones((100,100), dtype=np.float32)/100))
+		mask = np.eye(100, dtype=float)/100
 		result = cv2.filter2D(inImg, -1, mask)
 		outImg = self.MatToQImage(result)
 		self.outputLb.setPixmap(outImg.scaled(self.outputLb.width(),self.outputLb.height(),Qt.KeepAspectRatio))
 
+	def WeinerBn_clicked(self):
+		inImg = cv2.imread(self.path[0], 0)
+
+		mask = np.eye(100, dtype=float)/100
+		blurImg = cv2.filter2D(inImg, -1, mask)
+
+		dftInImg = cv2.dft(np.float32(inImg), flags = cv2.DFT_REAL_OUTPUT)
+		dftMask = cv2.dft(np.float32(mask), flags = cv2.DFT_REAL_OUTPUT)
+
+		# kernel = np.fft.fft2(kernel, s = blurImg.shape)
+		# print(np.abs(kernel).shape)
+		# dftMask = 
+		Weiner = np.conj(dftMask) / (np.abs(dftMask) ** 2 )
+		result = cv2.filter2D(dftInImg, -1, Weiner)
+		print(result)
+		# dftInImg = dftInImg * Weinerx
+		# print(kernel)
+		# dummy = dummy * kernel
+		# print(dummy)
+		# dummy = np.abs(np.fft.ifft2(dummy))
+		# print(dummy.max())
+
+		# outImg = self.MatToQImage(dummy)
+		# self.outputLb.setPixmap(outImg.scaled(self.outputLb.width(),self.outputLb.height(),Qt.KeepAspectRatio))
 
 	def MatToQImage(self, mat, swapped=True, qpixmap=True):
 		mat[mat >= 255] = 255
