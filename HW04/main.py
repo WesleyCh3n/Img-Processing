@@ -24,6 +24,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.homoBn.clicked.connect(self.homoBn_clicked)
 		self.motionBlurBn.clicked.connect(self.motionBlurBn_clicked)
 		self.WeinerBn.clicked.connect(self.WeinerBn_clicked)
+		self.invBn.clicked.connect(self.invBn_clicked)
 		# inImg = cv2.imread('C1HW04_IMG01_2019.jpg', 0)
 
 	def openImg_clicked(self):
@@ -186,7 +187,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 	def motionBlurBn_clicked(self):
 		inImg = cv2.imread(self.path[0], 0)
-		mask = np.eye(100, dtype=float)/100
+		mask = np.eye(30, dtype=float)/30
 		result = cv2.filter2D(inImg, -1, mask)
 		outImg = self.MatToQImage(result)
 		self.outputLb.setPixmap(outImg.scaled(self.outputLb.width(),self.outputLb.height(),Qt.KeepAspectRatio))
@@ -194,27 +195,45 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 	def WeinerBn_clicked(self):
 		inImg = cv2.imread(self.path[0], 0)
 
-		mask = np.eye(100, dtype=float)/100
-		blurImg = cv2.filter2D(inImg, -1, mask)
+		kernel = np.eye(50, dtype=np.float32)/50
+		blurImg = cv2.filter2D(inImg, -1, kernel)
 
-		dftInImg = cv2.dft(np.float32(inImg), flags = cv2.DFT_REAL_OUTPUT)
-		dftMask = cv2.dft(np.float32(mask), flags = cv2.DFT_REAL_OUTPUT)
+		dftInImg = np.fft.fft2(blurImg)
 
-		# kernel = np.fft.fft2(kernel, s = blurImg.shape)
-		# print(np.abs(kernel).shape)
-		# dftMask = 
-		Weiner = np.conj(dftMask) / (np.abs(dftMask) ** 2 )
-		result = cv2.filter2D(dftInImg, -1, Weiner)
-		print(result)
-		# dftInImg = dftInImg * Weinerx
+		kernel = np.fft.fft2(kernel, s = blurImg.shape)
+		kernel = np.conj(kernel) / (np.abs(kernel) ** 2 + 0.01)
+
+		dftInImg = dftInImg * kernel
+		dftInImg = np.abs(np.fft.ifft2(dftInImg))
+
+		outImg = self.MatToQImage(dftInImg)
+		self.outputLb.setPixmap(outImg.scaled(self.outputLb.width(),self.outputLb.height(),Qt.KeepAspectRatio))
+
+	def invBn_clicked(self):
+		np.seterr(divide='ignore',invalid='ignore')
+		inImg = cv2.imread(self.path[0], 0)
+		dftInImg = np.fft.fft2(inImg)
+		kernel = np.eye(30, dtype=np.float32)/30
+		kernel = np.fft.fft2(kernel, s = inImg.shape)
+		dftInImg = dftInImg * kernel
+		dftInImg = np.abs(np.fft.ifft2(dftInImg))
+
+		dftInImg = np.fft.fft2(dftInImg)
+		print(dftInImg)
 		# print(kernel)
-		# dummy = dummy * kernel
-		# print(dummy)
-		# dummy = np.abs(np.fft.ifft2(dummy))
-		# print(dummy.max())
-
-		# outImg = self.MatToQImage(dummy)
-		# self.outputLb.setPixmap(outImg.scaled(self.outputLb.width(),self.outputLb.height(),Qt.KeepAspectRatio))
+		dftInImg = dftInImg / kernel
+		print("This is ",dftInImg)
+		# dftInImg = np.abs(np.fft.ifft2(dftInImg))
+		dftInImg = cv2.idft(dftInImg, flags=cv2.DFT_REAL_OUTPUT)
+		# print("and is ", dftInImg)
+		# blurImg = cv2.filter2D(inImg, -1, kernel)
+		# dftInImg = np.fft.fft2(blurImg)
+		# kernel = np.fft.fft2(kernel, s = blurImg.shape)
+		# dftInImg = dftInImg / kernel
+		# dftInImg = np.abs(np.fft.ifft2(dftInImg))
+		# print(dftInImg)
+		outImg = self.MatToQImage(dftInImg)
+		self.outputLb.setPixmap(outImg.scaled(self.outputLb.width(),self.outputLb.height(),Qt.KeepAspectRatio))
 
 	def MatToQImage(self, mat, swapped=True, qpixmap=True):
 		mat[mat >= 255] = 255
