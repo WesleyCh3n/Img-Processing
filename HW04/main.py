@@ -14,7 +14,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.setupUi(self)
 		self.path = False
 		self.inImg = False
-		self.cutOffValue = 0
+		self.cutOffValue = 10
 		self.actionOpen_File.triggered.connect(self.openImg_clicked)
 		self.dftBn.clicked.connect(self.fftBn_clicked)
 		self.idftBn.clicked.connect(self.idftBn_clicked)
@@ -33,13 +33,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 	def openImg_clicked(self):
 		self.path = QFileDialog.getOpenFileName(self,"Open file","","Images(*.jpg *.bmp)")
-		if self.path[0] == '': return QMessageBox.warning(self, "WARNING", "The input image is empty")
 		self.inImg = cv2.imread(self.path[0], 0)
 		outImg = self.MatToQImage(self.inImg)
 		self.oriLb.setPixmap(outImg.scaled(self.oriLb.width(),self.oriLb.height(),Qt.KeepAspectRatio))
 		self.inputLb.setPixmap(outImg.scaled(577, 479, Qt.KeepAspectRatio))
 
 	def fftBn_clicked(self):
+		if self.path == False: return QMessageBox.warning(self, "WARNING", "The input image is empty")
 		inImg = cv2.imread(self.path[0], 0)
 		dft = cv2.dft(np.float32(inImg), flags = cv2.DFT_COMPLEX_OUTPUT)
 		dft_shift = np.fft.fftshift(dft)
@@ -66,12 +66,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		return dft, dft_shift
 
 	def idftBn_clicked(self):
+		if self.path == False: return QMessageBox.warning(self, "WARNING", "The input image is empty")
 		dft, dft_shift = self.fftBn_clicked()
 		back = cv2.idft(dft,flags=cv2.DFT_SCALE | cv2.DFT_REAL_OUTPUT)
 		outImg = self.MatToQImage(back)
 		self.idftLb.setPixmap(outImg.scaled(self.idftLb.width(),self.idftLb.height(),Qt.KeepAspectRatio))
 
 	def idLowBn_clicked(self):
+		if self.path == False: return QMessageBox.warning(self, "WARNING", "The input image is empty")
 		dft, dft_shift = self.fftBn_clicked()
 		rows, cols = self.inImg.shape
 		mask = np.zeros((rows, cols, 2), np.uint8)
@@ -90,6 +92,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.outputLb.setPixmap(outImg.scaled(self.outputLb.width(),self.outputLb.height(),Qt.KeepAspectRatio))
 
 	def bLowBn_clicked(self):
+		if self.path == False: return QMessageBox.warning(self, "WARNING", "The input image is empty")
 		dft, dft_shift = self.fftBn_clicked()
 		rows, cols = self.inImg.shape
 		mask = np.zeros((rows, cols, 2), np.float32)
@@ -104,6 +107,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.outputLb.setPixmap(outImg.scaled(self.outputLb.width(),self.outputLb.height(),Qt.KeepAspectRatio))
 
 	def GauLowBn_clicked(self):
+		if self.path == False: return QMessageBox.warning(self, "WARNING", "The input image is empty")
 		dft, dft_shift = self.fftBn_clicked()
 		rows, cols = self.inImg.shape
 		mask = np.zeros((rows, cols, 2), np.float32)
@@ -118,6 +122,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.outputLb.setPixmap(outImg.scaled(self.outputLb.width(),self.outputLb.height(),Qt.KeepAspectRatio))
 
 	def idHighBn_clicked(self):
+		if self.path == False: return QMessageBox.warning(self, "WARNING", "The input image is empty")
 		dft, dft_shift = self.fftBn_clicked()
 		rows, cols = self.inImg.shape
 		mask = np.zeros((rows, cols, 2), np.uint8)
@@ -136,6 +141,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.outputLb.setPixmap(outImg.scaled(self.outputLb.width(),self.outputLb.height(),Qt.KeepAspectRatio))
 
 	def bHighBn_clicked(self):
+		if self.path == False: return QMessageBox.warning(self, "WARNING", "The input image is empty")
 		dft, dft_shift = self.fftBn_clicked()
 		rows, cols = self.inImg.shape
 		mask = np.zeros((rows, cols, 2), np.float32)
@@ -150,6 +156,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.outputLb.setPixmap(outImg.scaled(self.outputLb.width(),self.outputLb.height(),Qt.KeepAspectRatio))
 
 	def GauHighBn_clicked(self):
+		if self.path == False: return QMessageBox.warning(self, "WARNING", "The input image is empty")
 		dft, dft_shift = self.fftBn_clicked()
 		rows, cols = self.inImg.shape
 		mask = np.zeros((rows, cols, 2), np.float32)
@@ -164,6 +171,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.outputLb.setPixmap(outImg.scaled(self.outputLb.width(),self.outputLb.height(),Qt.KeepAspectRatio))
 
 	def homoBn_clicked(self):
+		if self.path == False: return QMessageBox.warning(self, "WARNING", "The input image is empty")
 		dft, dft_shift = self.fftBn_clicked()
 		rows, cols = self.inImg.shape
 		mask = np.zeros((rows, cols, 2), np.float32)
@@ -180,6 +188,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.outputLb.setPixmap(outImg.scaled(self.outputLb.width(),self.outputLb.height(),Qt.KeepAspectRatio))
 
 	def motionBlurBn_clicked(self):
+		if self.path == False: return QMessageBox.warning(self, "WARNING", "The input image is empty")
 		T = self.TSb.value()
 		inImg = cv2.imread(self.path[0], 0)
 		mask = np.eye(T, dtype=float)/T
@@ -188,6 +197,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.outputLb.setPixmap(outImg.scaled(self.outputLb.width(),self.outputLb.height(),Qt.KeepAspectRatio))
 
 	def WeinerBn_clicked(self):
+		if self.path == False: return QMessageBox.warning(self, "WARNING", "The input image is empty")
 		K = self.kSb.value()
 		T = self.TSb.value()
 		inImg = cv2.imread(self.path[0], 0)
@@ -206,6 +216,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		self.outputLb.setPixmap(outImg.scaled(self.outputLb.width(),self.outputLb.height(),Qt.KeepAspectRatio))
 
 	def invBn_clicked(self):
+		if self.path == False: return QMessageBox.warning(self, "WARNING", "The input image is empty")
 		np.seterr(divide='ignore',invalid='ignore')
 		inImg = cv2.imread(self.path[0], 0)
 		kernel = np.eye(30, dtype=np.float32)/30
