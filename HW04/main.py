@@ -217,7 +217,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 	def invBn_clicked(self):
 		if self.path == False: return QMessageBox.warning(self, "WARNING", "The input image is empty")
-		np.seterr(divide='ignore',invalid='ignore')
+		# np.seterr(divide='ignore',invalid='ignore')
 		inImg = cv2.imread(self.path[0], 0)
 		kernel = np.eye(30, dtype=np.float32)/30
 		blurImg = cv2.filter2D(inImg, -1, kernel)
