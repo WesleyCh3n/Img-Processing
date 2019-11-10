@@ -344,6 +344,9 @@ class Ui_MainWindow(object):
         self.kSb.setSingleStep(0.0001)
         self.kSb.setValue(0.001)
 
+        self.dftBn.setToolTip('This is dft \n option')
+        self.cutoffSb.setToolTip('The range will be something')
+
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
