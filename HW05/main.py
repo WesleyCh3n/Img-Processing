@@ -4,8 +4,14 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 import qdarkstyle
 
-class MainWindow(QMainWindowm, Ui_MainWindow):
+class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent = None):
         super().__init__(parent)
         self.setupUi(self)
-        self.actionOpenFile_triggered
+
+if __name__ == "__main__":
+    app = QApplication([])
+    app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+    w = MainWindow()
+    w.show()
+    app.exec_()
