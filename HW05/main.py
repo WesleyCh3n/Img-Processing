@@ -39,6 +39,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 I = (r+g+b)/3.0
                 if (r+g+b) == 0: S = 0
                 else: S = 1-3.0/(r+g+b)*min((r,g,b))
+                if S != 0:
+                    den = np.sqrt()
                 
 
 
