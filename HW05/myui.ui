@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1045</width>
-    <height>680</height>
+    <width>1042</width>
+    <height>692</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
       <x>10</x>
       <y>10</y>
       <width>301</width>
-      <height>101</height>
+      <height>141</height>
      </rect>
     </property>
     <property name="title">
@@ -35,7 +35,7 @@
        <x>10</x>
        <y>30</y>
        <width>281</width>
-       <height>58</height>
+       <height>101</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout">
@@ -88,7 +88,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>140</y>
+      <y>160</y>
       <width>500</width>
       <height>500</height>
      </rect>
@@ -120,7 +120,7 @@
     <property name="geometry">
      <rect>
       <x>530</x>
-      <y>140</y>
+      <y>160</y>
       <width>500</width>
       <height>500</height>
      </rect>
@@ -148,13 +148,160 @@
      </property>
     </widget>
    </widget>
+   <widget class="QGroupBox" name="groupBox_4">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>10</y>
+      <width>391</width>
+      <height>141</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Pseudo Color</string>
+    </property>
+    <widget class="QWidget" name="">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>371</width>
+       <height>104</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="springRb">
+        <property name="text">
+         <string>Spring</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QRadioButton" name="rainbowRb">
+        <property name="text">
+         <string>Rainbow</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QRadioButton" name="autumnRb">
+        <property name="text">
+         <string>Autumn</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="summerRb">
+        <property name="text">
+         <string>Summer</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QRadioButton" name="twilightRb">
+        <property name="text">
+         <string>Twilight</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QRadioButton" name="hotRb">
+        <property name="text">
+         <string>Hot</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QRadioButton" name="coolRb">
+        <property name="text">
+         <string>Cool</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QRadioButton" name="winterRb">
+        <property name="text">
+         <string>Winter</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="4">
+       <widget class="QLabel" name="cmapLb">
+        <property name="text">
+         <string>CMAP</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1" colspan="2">
+       <widget class="QPushButton" name="pseudoPb">
+        <property name="text">
+         <string>Pseudo Color</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_5">
+    <property name="geometry">
+     <rect>
+      <x>740</x>
+      <y>10</y>
+      <width>291</width>
+      <height>141</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Kmeans</string>
+    </property>
+    <widget class="QWidget" name="">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>271</width>
+       <height>106</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="0" colspan="4">
+       <widget class="QScrollBar" name="kmeanSb">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1" colspan="2">
+       <widget class="QPushButton" name="kmeanPb">
+        <property name="text">
+         <string>Kmeans</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="4">
+       <widget class="QLabel" name="kLb">
+        <property name="text">
+         <string>K = 0</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1045</width>
+     <width>1042</width>
      <height>22</height>
     </rect>
    </property>
