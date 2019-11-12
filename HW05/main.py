@@ -101,7 +101,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.showImg(YUVImg)
 
     def pseudoPb_clicked(self):
-        # print(self.summerRb.isChecked())
         inImg = self.inImg
         grayImg = cv2.imread(self.path[0], 0)
         pseudoImg = np.copy(inImg)
