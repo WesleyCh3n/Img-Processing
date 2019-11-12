@@ -27,9 +27,9 @@
      <string>Color Transformation</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
     </property>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -40,7 +40,7 @@
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
-       <widget class="QPushButton" name="RGVPb">
+       <widget class="QPushButton" name="RGBPb">
         <property name="text">
          <string>RGB</string>
         </property>
@@ -97,7 +97,7 @@
      <string>Input</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
     </property>
     <widget class="QLabel" name="inputLb">
      <property name="geometry">
@@ -110,6 +110,9 @@
      </property>
      <property name="text">
       <string>Input</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </widget>
@@ -126,7 +129,7 @@
      <string>Output</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
     </property>
     <widget class="QLabel" name="outputLb">
      <property name="geometry">
@@ -139,6 +142,9 @@
      </property>
      <property name="text">
       <string>output</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </widget>
@@ -156,16 +162,11 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionOpen_File_2"/>
+    <addaction name="actionOpen_File"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
   <action name="actionOpen_File">
-   <property name="text">
-    <string>Open File</string>
-   </property>
-  </action>
-  <action name="actionOpen_File_2">
    <property name="text">
     <string>Open File</string>
    </property>
