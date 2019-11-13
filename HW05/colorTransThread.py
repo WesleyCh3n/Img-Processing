@@ -97,5 +97,4 @@ class colorTrans(QThread):
             self.Lab()
         if self.yuvFlag == True:
             self.YUV()
-        
         self.resetFlag()
