@@ -64,7 +64,8 @@ class colorTrans(QThread):
                 L = 116*funcH(y/1)-16
                 a = 500*(funcH(x/0.950456)-funcH(y))
                 b_ = 200*(funcH(y/1)-funcH(z/1.088754))
-                LabImg[i,j,:] = L*2.55, a+128, b_+128
+                # LabImg[i,j,:] = L*2.55, a+128, b_+128
+                LabImg[i,j,:] = b_+128, a+128, L*2.55
             self.progress.emit(i*101/rows)
         self.processImg.emit(LabImg)
     
@@ -79,6 +80,7 @@ class colorTrans(QThread):
                 U = (r-Y)*0.713 + 128
                 V = (b-Y)*0.564 + 128
                 YUVImg[i, j, :] = Y*255, U, V
+                YUVImg[i, j, :] = V, U, Y*255
             self.progress.emit(i*101/rows)
         self.processImg.emit(YUVImg) 
 
