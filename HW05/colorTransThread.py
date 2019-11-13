@@ -79,7 +79,7 @@ class colorTrans(QThread):
                 Y = 0.299*r + 0.587*g + 0.114*b
                 U = (r-Y)*0.713 + 128
                 V = (b-Y)*0.564 + 128
-                YUVImg[i, j, :] = Y*255, U, V
+                # YUVImg[i, j, :] = Y*255, U, V
                 YUVImg[i, j, :] = V, U, Y*255
             self.progress.emit(i*101/rows)
         self.processImg.emit(YUVImg) 
