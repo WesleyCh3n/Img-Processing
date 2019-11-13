@@ -23,6 +23,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pseudoPb.clicked.connect(self.pseudoPb_clicked)
         self.kmeanPb.clicked.connect(self.kmeanPb_clicked)
 
+        self.springRb.clicked.connect(self.checkSignal)
+        self.summerRb.clicked.connect(self.checkSignal)
+        self.autumnRb.clicked.connect(self.checkSignal)
+        self.winterRb.clicked.connect(self.checkSignal)
+        self.hotRb.clicked.connect(self.checkSignal)
+        self.coolRb.clicked.connect(self.checkSignal)
+        self.twilightRb.clicked.connect(self.checkSignal)
+        self.rainbowRb.clicked.connect(self.checkSignal)
+
+        self.kmeanSd.setToolTip("The range is from 2 to 10")
+        self.kmeanSd.valueChanged.connect(self.kLbShow)
+
         self.threadObj = colorTrans()
         self.threadObj.progress.connect(self.pB.setValue)
         self.threadObj.processImg.connect(self.showImg)
@@ -30,6 +42,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def actionOpen_File_triggered(self):
         self.path = QFileDialog.getOpenFileName(self,"Open file","","Images(*.jpg *.bmp)")
         self.inImg = cv2.imread(self.path[0])
+        self.threadObj.inImg = self.inImg
         self.showImg(self.inImg, True)
 
     def RGBPb_clicked(self):
@@ -40,78 +53,51 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.showImg(inImg)
     
     def HSIPb_clicked(self):
-        self.threadObj.inImg = self.inImg
         self.threadObj.hsiFlag = True
         self.threadObj.start()
 
     def XYZPb_clicked(self):
-        inImg = self.inImg/255.0
-        xyzImg = self.inImg/255.0
-        rows, cols, dims = self.inImg.shape
-        for i in range(rows):
-            for j in range(cols):
-                b, g, r = inImg[i, j, :]
-                x = (0.412453*r + 0.357580*g + 0.180423*b)*255
-                y = (0.212671*r + 0.715160*g + 0.072169*b)*255
-                z = (0.019334*r + 0.119193*g + 0.950227*b)*255
-                xyzImg[i, j, :] = z, y, x
-        self.showImg(xyzImg)
+        self.threadObj.xyzFlag = True
+        self.threadObj.start()
 
     def LabPb_clicked(self):
-        inImg = self.inImg/255.0
-        LabImg = self.inImg/255.0
-        rows, cols, dims = self.inImg.shape
-        funcH = lambda q: q**(1/3) if q > 0.008856 else (7.787*q + 16/116)
-        for i in range(rows):
-            for j in range(cols): 
-                b, g, r = inImg[i, j, :]
-                x = (0.412453*r + 0.357580*g + 0.180423*b)*255
-                y = (0.212671*r + 0.715160*g + 0.072169*b)*255
-                z = (0.019334*r + 0.119193*g + 0.950227*b)*255 
-                L = 116*funcH(y/1)-16
-                a = 500*(funcH(x/0.950456)-funcH(y))
-                b_ = 200*(funcH(y/1)-funcH(z/1.088754))
-                LabImg[i,j,:] = L*2.55, a+128, b_+128
-        self.showImg(LabImg)
+        self.threadObj.LabFlag = True
+        self.threadObj.start()
 
     def YUVPb_clicked(self):
-        inImg = self.inImg/255.0 
-        YUVImg = self.inImg/255.0
-        rows, cols, dims = self.inImg.shape
-        for i in range(rows):
-            for j in range(cols):
-                b, g, r = inImg[i, j, :]
-                Y = 0.299*r + 0.587*g + 0.114*b
-                U = (r-Y)*0.713 + 128
-                V = (b-Y)*0.564 + 128
-                YUVImg[i, j, :] = Y*255, U, V
-        self.showImg(YUVImg)
+        self.threadObj.yuvFlag = True
+        self.threadObj.start()
 
     def pseudoPb_clicked(self):
         inImg = self.inImg
-        grayImg = cv2.imread(self.path[0], 0)
-        pseudoImg = np.copy(inImg)
-        rows, cols, dims = self.inImg.shape
-        colorMap = cv2.applyColorMap(np.arange(256).reshape(1,256,1).astype(np.uint8),6)
-        outImg = self.MatToQImage(colorMap)
-        self.cmapLb.setPixmap(outImg.scaled(self.cmapLb.width(),self.inputLb.height())) 
 
-        for i in range(rows):
-            for j in range(cols):
-                pseudoImg[i, j, :] = colorMap[0,grayImg[i,j],:]
+        # pseudoImg = np.copy(inImg)
+        # grayImg = cv2.imread(self.path[0], 0)
+        # rows, cols,pseudoImg dims = self.inImg.shape
+        # colorMap = cv2.applyColorMap(np.arange(256).reshape(1,256,1).astype(np.uint8),self.groupButton.checkedId())
+        # for i in range(rows):
+        #     for j in range(cols):
+        #         pseudoImg[i, j, :] = colorMap[0,grayImg[i,j],:]
 
-        # outImg = cv2.applyColorMap(inImg, cv2.COLORMAP_SUMMER)
-        self.showImg(pseudoImg)
+        outImg = cv2.applyColorMap(inImg, self.groupButton.checkedId())
+        self.showImg(outImg)
     
     def kmeanPb_clicked(self):
         inImg = self.inImg
         flatImg = inImg.reshape((-1,3)).astype(np.float32)
         criteria = (cv2.TERM_CRITERIA_EPS+cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
-        ret, label, center = cv2.kmeans(flatImg, 2, None, criteria, 10, cv2.KMEANS_PP_CENTERS)
+        ret, label, center = cv2.kmeans(flatImg, self.kmeanSd.value(), None, criteria, 10, cv2.KMEANS_PP_CENTERS)
         center = np.uint8(center)
         res = center[label.flatten()]
         outputImg = res.reshape((inImg.shape))
         self.showImg(outputImg)
+    
+    def kLbShow(self):
+        self.kLb.setText("K = "+str(self.kmeanSd.value()))
+    
+    def checkSignal(self):
+        colorMap = cv2.applyColorMap(np.arange(256).reshape(1,256,1).astype(np.uint8),self.groupButton.checkedId())
+        self.showImg(colorMap, cmapLb=True)
 
     def MatToQImage(self, mat, swapped=True, qpixmap=True):
         mat[mat >= 255] = 255
@@ -132,10 +118,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 qimage = qimage.rgbSwapped()
                 return qimage
     
-    def showImg(self, input, inLB = False):
+    def showImg(self, input, inLb = False, cmapLb = False):
         outImg = self.MatToQImage(input)
-        if inLB == True:
+        if inLb == True:
             self.inputLb.setPixmap(outImg.scaled(self.inputLb.width(),self.inputLb.height(),Qt.KeepAspectRatio)) 
+        elif cmapLb == True:
+            self.cmapLb.setPixmap(outImg.scaled(self.cmapLb.width(),self.inputLb.height()))
         else:
             self.outputLb.setPixmap(outImg.scaled(self.outputLb.width(),self.outputLb.height(),Qt.KeepAspectRatio)) 
 
