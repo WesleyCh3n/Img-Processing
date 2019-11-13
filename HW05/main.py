@@ -78,13 +78,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if self.path == False: return QMessageBox.warning(self, "WARNING", "The input image is empty")
         inImg = self.inImg
 
-        # pseudoImg = np.copy(inImg)
-        # grayImg = cv2.imread(self.path[0], 0)
-        # rows, cols,pseudoImg dims = self.inImg.shape
-        # colorMap = cv2.applyColorMap(np.arange(256).reshape(1,256,1).astype(np.uint8),self.groupButton.checkedId())
-        # for i in range(rows):
-        #     for j in range(cols):
-        #         pseudoImg[i, j, :] = colorMap[0,grayImg[i,j],:]
+        pseudoImg = np.copy(inImg)
+        grayImg = cv2.imread(self.path[0], 0)
+        rows, cols,pseudoImg dims = self.inImg.shape
+        colorMap = cv2.applyColorMap(np.arange(256).reshape(1,256,1).astype(np.uint8),self.groupButton.checkedId())
+        for i in range(rows):
+            for j in range(cols):
+                pseudoImg[i, j, :] = colorMap[0,grayImg[i,j],:]
 
         outImg = cv2.applyColorMap(inImg, self.groupButton.checkedId())
         self.showImg(outImg)
