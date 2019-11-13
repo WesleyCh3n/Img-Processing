@@ -46,29 +46,36 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.showImg(self.inImg, True)
 
     def RGBPb_clicked(self):
+        if self.path == False: return QMessageBox.warning(self, "WARNING", "The input image is empty")
         self.showImg(self.inImg)
 
     def CMYPb_clicked(self):
+        if self.path == False: return QMessageBox.warning(self, "WARNING", "The input image is empty")
         inImg = 255 - self.inImg
         self.showImg(inImg)
     
     def HSIPb_clicked(self):
+        if self.path == False: return QMessageBox.warning(self, "WARNING", "The input image is empty")
         self.threadObj.hsiFlag = True
         self.threadObj.start()
 
     def XYZPb_clicked(self):
+        if self.path == False: return QMessageBox.warning(self, "WARNING", "The input image is empty")
         self.threadObj.xyzFlag = True
         self.threadObj.start()
 
     def LabPb_clicked(self):
+        if self.path == False: return QMessageBox.warning(self, "WARNING", "The input image is empty")
         self.threadObj.LabFlag = True
         self.threadObj.start()
 
     def YUVPb_clicked(self):
+        if self.path == False: return QMessageBox.warning(self, "WARNING", "The input image is empty")
         self.threadObj.yuvFlag = True
         self.threadObj.start()
 
     def pseudoPb_clicked(self):
+        if self.path == False: return QMessageBox.warning(self, "WARNING", "The input image is empty")
         inImg = self.inImg
 
         # pseudoImg = np.copy(inImg)
@@ -83,6 +90,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.showImg(outImg)
     
     def kmeanPb_clicked(self):
+        if self.path == False: return QMessageBox.warning(self, "WARNING", "The input image is empty")
         inImg = self.inImg
         flatImg = inImg.reshape((-1,3)).astype(np.float32)
         criteria = (cv2.TERM_CRITERIA_EPS+cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
