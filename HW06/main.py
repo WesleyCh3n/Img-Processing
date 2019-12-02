@@ -1,39 +1,56 @@
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
+import qdarkstyle
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from myui import *
 
-img = cv2.imread('IP_dog.bmp')
-rows, cols, dims = img.shape
-print(rows,cols, dims)
-transImg = np.zeros((rows, cols, 3), np.uint8)
-### Trapezoidal Transformation
-# for y in range(rows):
-#     for x in range(cols):
-#         transImg[int(3*y/4+x*y/(rows*cols))][int(x+y/4-x*y/(2*rows))] = img[y][x]
+class MainWindow(QMainWindow, Ui_MainWindow):
+    def __init__(self, parent = None):
+        super().__init__(parent)
+        self.setupUi(self)
+        self.path = False
+        self.inImg = False
+        self.actionOpen_Image.triggered.connect(self.actionOpen_file_triggered)
+        
+    def actionOpen_file_triggered(self):
+        self.path = QFileDialog.getOpenFileName(self,"Open file","","Images(*.jpg *.bmp)")
+        self.inImg = cv2.imread(self.path[0])
+        #self.threadObj.inImg = self.inImg
+        self.showImg(self.inImg, True)
 
-### Wavy Transformation
-for y in range(rows):
-    for x in range(cols):
-        x_offset = x + int(50.0 * np.sin(0.5 * np.pi * y / 150)) 
-        y_offset = y + int(50.0 * np.cos(0.5 * np.pi * x / 150))
-        if x_offset > 0 and y_offset > 0:
-            if y_offset<rows and x_offset < cols:
-                transImg[y][x] = img[(y_offset)%rows][(x_offset)%cols]
+    def MatToQImage(self, mat, swapped=True, qpixmap=True):
+        mat[mat >= 255] = 255
+        mat[mat <= 0] = 0
+        if mat.ndim == 2:
+            mat = np.repeat(mat[:, :, np.newaxis], 3, axis=2)
+        if mat.dtype != np.uint8:
+            mat = mat.astype(np.uint8)
+        height, width, channel = mat.shape
+        bytesPerLine = 3 * width
+        qimage = QtGui.QImage(mat.data, width, height, bytesPerLine, QtGui.QImage.Format_RGB888)
+        if swapped:
+            if qpixmap:
+                qimage = qimage.rgbSwapped()
+                final = QPixmap.fromImage(qimage)
+                return final
+            else:	
+                qimage = qimage.rgbSwapped()
+                return qimage
+    
+    def showImg(self, input, inLb = False):
+        outImg = self.MatToQImage(input)
+        if inLb == True:
+            self.inputLb.setPixmap(outImg.scaled(self.inputLb.width(),self.inputLb.height(),Qt.KeepAspectRatio)) 
+        else:
+            self.outputLb.setPixmap(outImg.scaled(self.outputLb.width(),self.outputLb.height(),Qt.KeepAspectRatio)) 
+            
+if __name__ == "__main__":
+    App = QApplication([])
+    App.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+    w = MainWindow()
+    w.show()
+    App.exec_()
 
-# plt.subplot(1,2,1), plt.imshow(transImg[:,:,::-1])
-# plt.subplot(1,2,2), plt.imshow(transImg2[:,:,::-1])
-
-### Circular Transformation
-#xR = rows/2.0
-#yR = cols/2.0
-#for y in range(cols):
-#    for x in range(rows):
-#        x_ratio = (x - xR)/xR
-#        y_ratio = (y - yR)/yR
-#        x_mod = x_ratio * np.sqrt(1 - y_ratio**2/2) * xR + xR
-#        y_mod = y_ratio * np.sqrt(1 - x_ratio**2/2) * yR + yR
-#        transImg[int(x_mod)][int(y_mod)] = img[x][y]
-plt.imshow(transImg[:,:,::-1])
-
-# plt.savefig('saveImg.png')
-plt.show()
+    
