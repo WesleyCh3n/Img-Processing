@@ -19,6 +19,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.wavyBn.clicked.connect(self.wavyBn_clicked)
         self.cirBn.clicked.connect(self.cirBn_clicked)
         self.houBn.clicked.connect(self.houBn_clicked)
+        self.openmultiBn.clicked.connect(self.openmultiBn_clicked)
+        self.dwtBn.clicked.connect(self.dwtBn_clicked)
 
         self.htsB.setRange(1, 100)
         self.htsB.setValue(51)
@@ -73,6 +75,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.textBrowser.append(f"Total pixel length is {len_sum:.2f}")
         self.textBrowser.append(f"There are {numbers} lines\n"+"="*16)
         self.showImg(outImg)
+
+    def openmultiBn_clicked(self):
+        path = QFileDialog.getOpenFileNames(self,"Open file","","Images(*.JPG *.jpg *.bmp)")
+        print(path)
+
+    def dwtBn_clicked(self):
+        return 0
+
         
     def MatToQImage(self, mat, swapped=True, qpixmap=True):
         mat[mat >= 255] = 255

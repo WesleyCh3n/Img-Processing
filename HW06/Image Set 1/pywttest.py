@@ -9,8 +9,8 @@ min_len = min(img1.shape)
 img1 = cv2.resize(img1, (min_len, min_len))
 img2 = cv2.resize(img2, (min_len, min_len))
 
-coeff1 = pywt.dwt2(img1, 'haar')
-coeff2 = pywt.dwt2(img2, 'haar')
+coeff1 = pywt.dwt2(img1, 'db')
+coeff2 = pywt.dwt2(img2, 'db')
 
 ca1,(ch1,cv1,cd1) = coeff1
 ca2,(ch2,cv2,cd2) = coeff2
