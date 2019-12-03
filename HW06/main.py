@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from myui import *
+from wrapthread import wrap
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent = None):
@@ -12,13 +13,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.path = False
         self.inImg = False
+
         self.actionOpen_Image.triggered.connect(self.actionOpen_file_triggered)
-        
+        self.trapBn.clicked.connect(self.trapBn_clicked)        
+
+        self.wrapObj = wrap()
+        self.wrapObj.progress.connect(self.progressBar.setValue)
+        self.wrapObj.processImg.connect(self.showImg)
+
     def actionOpen_file_triggered(self):
         self.path = QFileDialog.getOpenFileName(self,"Open file","","Images(*.jpg *.bmp)")
         self.inImg = cv2.imread(self.path[0])
         #self.threadObj.inImg = self.inImg
         self.showImg(self.inImg, True)
+
+    def trapBn_clicked(self):
+        self.wrapObj.inImg = self.inImg
+        self.wrapObj.trapFlag = True
+        self.wrapObj.start()
 
     def MatToQImage(self, mat, swapped=True, qpixmap=True):
         mat[mat >= 255] = 255
