@@ -1,4 +1,4 @@
 
 *.pyc
-.swp
+*.swp
 .DS_Store
