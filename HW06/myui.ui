@@ -170,14 +170,11 @@
       <item row="0" column="0">
        <widget class="QPushButton" name="openmultiBn">
         <property name="text">
-         <string>Open Multiple Images</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QPushButton" name="dwtBn">
-        <property name="text">
-         <string>Wavelet Transformation</string>
+         <string>Open Multiple Images
+&amp;&amp;
+Wavelet Transformation
+&amp;&amp;
+Show with matplot</string>
         </property>
        </widget>
       </item>

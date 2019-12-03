@@ -79,9 +79,6 @@ class Ui_MainWindow(object):
         self.openmultiBn = QtWidgets.QPushButton(self.layoutWidget1)
         self.openmultiBn.setObjectName("openmultiBn")
         self.gridLayout_3.addWidget(self.openmultiBn, 0, 0, 1, 1)
-        self.dwtBn = QtWidgets.QPushButton(self.layoutWidget1)
-        self.dwtBn.setObjectName("dwtBn")
-        self.gridLayout_3.addWidget(self.dwtBn, 1, 0, 1, 1)
         self.groupBox_5 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_5.setGeometry(QtCore.QRect(530, 10, 421, 171))
         self.groupBox_5.setObjectName("groupBox_5")
@@ -142,8 +139,11 @@ class Ui_MainWindow(object):
         self.cirBn.setText(_translate("MainWindow", "Circular"))
         self.label_2.setText(_translate("MainWindow", "Frequency"))
         self.groupBox_4.setTitle(_translate("MainWindow", "Wavelet Transformation"))
-        self.openmultiBn.setText(_translate("MainWindow", "Open Multiple Images"))
-        self.dwtBn.setText(_translate("MainWindow", "Wavelet Transformation"))
+        self.openmultiBn.setText(_translate("MainWindow", "Open Multiple Images\n"
+"&&\n"
+"Wavelet Transformation\n"
+"&&\n"
+"Show with matplot"))
         self.groupBox_5.setTitle(_translate("MainWindow", "Hough Transformation"))
         self.label_3.setText(_translate("MainWindow", "Threshold"))
         self.label_4.setText(_translate("MainWindow", "MinLineLength"))
