@@ -36,7 +36,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Input</string>
+      <string/>
      </property>
     </widget>
    </widget>
@@ -62,14 +62,14 @@
       </rect>
      </property>
      <property name="text">
-      <string>Output</string>
+      <string/>
      </property>
     </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox_3">
     <property name="geometry">
      <rect>
-      <x>100</x>
+      <x>10</x>
       <y>10</y>
       <width>241</width>
       <height>171</height>
@@ -148,7 +148,7 @@
    <widget class="QGroupBox" name="groupBox_4">
     <property name="geometry">
      <rect>
-      <x>360</x>
+      <x>270</x>
       <y>10</y>
       <width>241</width>
       <height>171</height>
@@ -161,9 +161,9 @@
    <widget class="QGroupBox" name="groupBox_5">
     <property name="geometry">
      <rect>
-      <x>620</x>
+      <x>530</x>
       <y>10</y>
-      <width>241</width>
+      <width>421</width>
       <height>171</height>
      </rect>
     </property>
@@ -214,6 +214,16 @@
        </widget>
       </item>
      </layout>
+    </widget>
+    <widget class="QTextBrowser" name="textBrowser">
+     <property name="geometry">
+      <rect>
+       <x>240</x>
+       <y>30</y>
+       <width>171</width>
+       <height>131</height>
+      </rect>
+     </property>
     </widget>
    </widget>
    <widget class="QProgressBar" name="progressBar">
