@@ -22,7 +22,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.cirBn.clicked.connect(self.cirBn_clicked)
         self.houBn.clicked.connect(self.houBn_clicked)
         self.openmultiBn.clicked.connect(self.openmultiBn_clicked)
-        # self.dwtBn.clicked.connect(self.dwtBn_clicked)
 
         self.htsB.setRange(1, 100)
         self.htsB.setValue(51)
@@ -118,10 +117,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         plt.subplot(2, 1, 2), plt.imshow(resultImg)
         plt.title(f'Result', fontsize = 10)
         plt.show()
-
-    # def dwtBn_clicked(self):
-        # return 0
-
         
     def MatToQImage(self, mat, swapped=True, qpixmap=True):
         mat[mat >= 255] = 255
@@ -155,5 +150,3 @@ if __name__ == "__main__":
     w = MainWindow()
     w.show()
     App.exec_()
-
-    
