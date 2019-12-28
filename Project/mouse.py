@@ -6,6 +6,10 @@ ax = plt.gca()
 fig = plt.gcf()
 implot = ax.imshow(img)
 
+fig = plt.figure()
+ax0 = fig.add_subplot(111)
+ax0.imshow(img)
+
 def onclick(event):
     if event.xdata != None and event.ydata != None:
         print(event.xdata, event.ydata)
