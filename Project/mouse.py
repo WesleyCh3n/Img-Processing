@@ -2,9 +2,9 @@ import matplotlib.pyplot as plt
 import cv2
 
 img = cv2.imread('./img.jpg')
-ax = plt.gca()
-fig = plt.gcf()
-implot = ax.imshow(img)
+# ax = plt.gca()
+# fig = plt.gcf()
+# implot = ax.imshow(img)
 
 fig = plt.figure()
 ax0 = fig.add_subplot(111)

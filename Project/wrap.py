@@ -17,6 +17,9 @@ matrix = cv2.getPerspectiveTransform(pt1, pt2)
 print(matrix)
 result = cv2.warpPerspective(originalImg, matrix,(2480,3508))
 
+edge = cv2.Canny(originalImg, 50, 150, apertureSize = 3)
+print(edge.shape)
+
 plt.subplot(1,2,1), plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
 plt.title('Original')
 plt.subplot(1,2,2), plt.imshow(cv2.cvtColor(result, cv2.COLOR_BGR2RGB))
