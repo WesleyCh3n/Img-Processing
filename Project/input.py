@@ -16,10 +16,10 @@ img = cv2.imread('./test.jpg')
 # d.to_csv('./word.csv', index=False)
 
 '''Bounding box'''
-df = pd.read_csv('./word.csv')
-df['text'].replace('', np.nan, inplace=True)
+# df = pd.read_csv('./word.csv')
+# df['text'].replace('', np.nan, inplace=True)
 # print(df)
-df.dropna(subset=['text'], inplace=True)
+# df.dropna(subset=['text'], inplace=True)
 # print(df['level'].iloc[1])
 # for i in range(len(df['level'])):
 #     (x, y, w, h) = (df['left'].iloc[i], df['top'].iloc[i], df['width'].iloc[i], df['height'].iloc[i])
@@ -35,10 +35,15 @@ df.dropna(subset=['text'], inplace=True)
 # f.close()
 
 '''Put text on new image'''
+df = pd.read_csv('./word.csv')
+df['text'].replace('', np.nan, inplace=True)
+df.dropna(subset=['text'], inplace=True)
+
 print(img.shape)
 newImg = np.ones(img.shape, np.uint8) * 255
-(x, y, w, h) = (df['left'].iloc[0], df['top'].iloc[0], df['width'].iloc[0], df['height'].iloc[0])
-cv2.putText(newImg, str(df['text'].iloc[0]), (x, y), cv2.FONT_HERSHEY_DUPLEX, 0.7, (0,0,0), 1, cv2.LINE_AA)
+for i in range(len(df['level'])):
+    (x, y, w, h) = (df['left'].iloc[i], df['top'].iloc[i], df['width'].iloc[i], df['height'].iloc[i])
+    cv2.putText(newImg, str(df['text'].iloc[i]), (x, y), cv2.FONT_HERSHEY_DUPLEX, 0.7, (0,0,0), 1, cv2.LINE_AA)
 
 plt.imshow(cv2.cvtColor(newImg, cv2.COLOR_BGR2RGB))
 plt.show()
