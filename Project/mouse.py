@@ -7,8 +7,8 @@ img = cv2.imread('./img.jpg')
 # implot = ax.imshow(img)
 
 fig = plt.figure()
-ax0 = fig.add_subplot(111)
-ax0.imshow(img)
+ax = fig.add_subplot(111)
+ax.imshow(img)
 
 def onclick(event):
     if event.xdata != None and event.ydata != None:
