@@ -6,34 +6,60 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>650</width>
-    <height>433</height>
+    <width>779</width>
+    <height>504</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="drawPb">
     <property name="geometry">
      <rect>
       <x>30</x>
       <y>20</y>
-      <width>80</width>
+      <width>91</width>
       <height>24</height>
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>Draw Point</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="inputLb">
     <property name="geometry">
      <rect>
       <x>30</x>
       <y>60</y>
-      <width>301</width>
-      <height>291</height>
+      <width>351</width>
+      <height>401</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="wrapPb">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>20</y>
+      <width>91</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Wrap Image</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="outputLb">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>60</y>
+      <width>351</width>
+      <height>401</height>
      </rect>
     </property>
     <property name="text">
@@ -46,12 +72,24 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>650</width>
+     <width>779</width>
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionOpen_Image"/>
+   </widget>
+   <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionOpen_Image">
+   <property name="text">
+    <string>Open Image</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
