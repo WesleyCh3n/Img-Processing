@@ -51,7 +51,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         arr = np.c_[self.x, self.y]
         print(arr)
         pt1 = np.float32(np.round(arr))
-        pt2 = np.float32([[-1,0],[2480,0],[0,3508],[2480,3508]])
+        pt2 = np.float32([[0,0],[2480,0],[0,3508],[2480,3508]])
         matrix = cv2.getPerspectiveTransform(pt1, pt2)
         result = cv2.warpPerspective(wrapImg, matrix,(2480,3508))
         plt.imshow(cv2.cvtColor(result, cv2.COLOR_BGR2RGB))
