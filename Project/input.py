@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
-img = cv2.imread('./test.jpg')
+img = cv2.imread('./tes2.png')
+print(img.shape)
 # text = pytesseract.image_to_string(img, lang='eng')
 # print(text)
 
@@ -39,7 +40,6 @@ img = cv2.imread('./test.jpg')
 # df['text'].replace('', np.nan, inplace=True)
 # df.dropna(subset=['text'], inplace=True)
 
-print(img.shape)
 # newImg = np.ones(img.shape, np.uint8) * 255
 # for i in range(len(df['level'])):
 #     (x, y, w, h) = (df['left'].iloc[i], df['top'].iloc[i], df['width'].iloc[i], df['height'].iloc[i])
@@ -49,16 +49,25 @@ print(img.shape)
 # plt.show()
 
 '''PDF output'''
-df = pd.read_csv('./word.csv')
+# df = pd.read_csv('./word.csv')
+df = pytesseract.image_to_data(img, output_type=Output.DATAFRAME)
 df['text'].replace('', np.nan, inplace=True)
 df.dropna(subset=['text'], inplace=True)
-
-from fpdf import FPDF
-pdf = FPDF('P','pt','A4')
-pdf.add_page()
-pdf.set_font('Arial', '', 12)
+print(df)
 for i in range(len(df['level'])):
     (x, y, w, h) = (df['left'].iloc[i], df['top'].iloc[i], df['width'].iloc[i], df['height'].iloc[i])
-    pdf.set_xy(x, y)
-    pdf.cell(w, h, df['text'].iloc[i])
-pdf.output('tes.pdf')
+    cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+plt.show()
+
+# from fpdf import FPDF
+# pdf = FPDF('P','pt','A4')
+# pdf.add_page()
+# pdf.add_font('Times', '', './times-new-roman.ttf', uni=True)
+# pdf.set_font('Times', '', 10)
+# for i in range(len(df['level'])):
+#     (x, y, w, h) = (df['left'].iloc[i], df['top'].iloc[i], df['width'].iloc[i], df['height'].iloc[i])
+#     pdf.set_xy(x*(595/2479), y*(842/3580))
+#     pdf.cell(0, 0, df['text'].iloc[i])
+# pdf.output('tes2.pdf')
