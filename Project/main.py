@@ -26,7 +26,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionOpen_Image.triggered.connect(self.openImg_clicked)
 
     def openImg_clicked(self):
-        self.path = QFileDialog.getOpenFileName(self,"Open file","","Images(*.jpg *.bmp *.png)")
+        self.path = QFileDialog.getOpenFileName(self,"Open file","","Images(*.jpg *.jpeg *.bmp *.png)")
         self.inImg = cv2.imread(self.path[0])
         self.showImg(self.inImg, True)
 
@@ -37,6 +37,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.x.append(event.xdata)
                 self.y.append(event.ydata)
                 plt.plot(event.xdata, event.ydata, '.')
+                self.textBrowser.append(f'Point[{event.xdata}, {event.ydata}]')
+                if len(self.x) == 4:
+                    plt.close()
                 fig.canvas.draw()
 
         fig = plt.figure()
@@ -54,9 +57,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         wrapImg = np.copy(cv2.cvtColor(self.inImg, cv2.COLOR_BGR2GRAY))
         kernel = np.array([[0,-1,0], [-1,5,-1], [0,-1,0]])
         wrapImg = cv2.filter2D(wrapImg, -1, kernel)
-        print(self.x, self.y)
         arr = np.c_[self.x, self.y]
-        print(arr)
         pt1 = np.float32(np.round(arr))
         pt2 = np.float32([[0,0],[2480,0],[0,3508],[2480,3508]])
         matrix = cv2.getPerspectiveTransform(pt1, pt2)
