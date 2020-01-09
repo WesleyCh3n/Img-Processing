@@ -5,29 +5,26 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
-img = cv2.imread('./tes2.png')
+img = cv2.imread('./test.jpeg')
 print(img.shape)
 # text = pytesseract.image_to_string(img, lang='eng')
 # print(text)
 
-# d = pytesseract.image_to_boxes(img, lang='eng', output_type=Output.DATAFRAME)
-# print(type(d))
-
-# d = pytesseract.image_to_data(img, output_type=Output.DATAFRAME)
+df = pytesseract.image_to_data(img, output_type=Output.DATAFRAME)
 # d.to_csv('./word.csv', index=False)
 
 '''Bounding box'''
 # df = pd.read_csv('./word.csv')
-# df['text'].replace('', np.nan, inplace=True)
-# print(df)
-# df.dropna(subset=['text'], inplace=True)
-# print(df['level'].iloc[1])
-# for i in range(len(df['level'])):
-#     (x, y, w, h) = (df['left'].iloc[i], df['top'].iloc[i], df['width'].iloc[i], df['height'].iloc[i])
-#     cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+df['text'].replace('', np.nan, inplace=True)
+print(df)
+df.dropna(subset=['text'], inplace=True)
+print(df['level'].iloc[1])
+for i in range(len(df['level'])):
+    (x, y, w, h) = (df['left'].iloc[i], df['top'].iloc[i], df['width'].iloc[i], df['height'].iloc[i])
+    cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
-# plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-# plt.show()
+plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+plt.show()
 
 '''Bounding box'''
 # pdf = pytesseract.image_to_pdf_or_hocr(img, lang='eng')
@@ -50,16 +47,16 @@ print(img.shape)
 
 '''PDF output'''
 # df = pd.read_csv('./word.csv')
-df = pytesseract.image_to_data(img, output_type=Output.DATAFRAME)
-df['text'].replace('', np.nan, inplace=True)
-df.dropna(subset=['text'], inplace=True)
-print(df)
-for i in range(len(df['level'])):
-    (x, y, w, h) = (df['left'].iloc[i], df['top'].iloc[i], df['width'].iloc[i], df['height'].iloc[i])
-    cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+# df = pytesseract.image_to_data(img, output_type=Output.DATAFRAME)
+# df['text'].replace('', np.nan, inplace=True)
+# df.dropna(subset=['text'], inplace=True)
+# print(df)
+# for i in range(len(df['level'])):
+#     (x, y, w, h) = (df['left'].iloc[i], df['top'].iloc[i], df['width'].iloc[i], df['height'].iloc[i])
+#     cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
-plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-plt.show()
+# plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+# plt.show()
 
 # from fpdf import FPDF
 # pdf = FPDF('P','pt','A4')
